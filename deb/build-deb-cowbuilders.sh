@@ -18,18 +18,24 @@ cp libcouchbase-$VERSION.tar.gz $WORKSPACE/libcouchbase_$DEB_VERSION.orig.tar.gz
 cd $WORKSPACE;
 tar zxf libcouchbase_$DEB_VERSION.orig.tar.gz
 )
-(
-cd $PKGDIR;
-dch --no-auto-nmu --newversion "$DEB_VERSION" "Release package for libcouchbase $DEB_VERSION"
-debian/rules clean
-dpkg-source -b .
-)
-mv $WORKSPACE/*.{dsc,tar.gz} $PWD
-rm -rf $WORKSPACE
+
 if [ -z "${NO_GPG}" ]
 then
-    export DEB_FLAGS="$DEB_FLAGS -sa -k$GPG_KEY"
+    PKG_GPG_OPTS="--debbuildopts -k$GPG_KEY"
+    SRC_GPG_OPTS="-k $GPG_KEY"
 fi
+(
+    cd $PKGDIR;
+    dch \
+        --no-auto-nmu \
+        --newversion "$DEB_VERSION" \
+        "Release package for libcouchbase $DEB_VERSION"
+    
+    dpkg-buildpackage -rfakeroot -d -S -sa -k$GPG_KEY
+)
+
+mv $WORKSPACE/*.{dsc,tar.gz} $PWD
+rm -rf $WORKSPACE
 
 for DIST in lucid oneiric precise; do
     for ARCH in i386 amd64; do
@@ -40,6 +46,8 @@ for DIST in lucid oneiric precise; do
             --basepath /var/cache/pbuilder/$DIST-$ARCH.cow \
             --buildresult $RESDIR \
             --debbuildopts -j20 \
+            --debbuildopts -sa \
+            $PKG_GPG_OPTS \
             libcouchbase_$DEB_VERSION.dsc
     done
 done
