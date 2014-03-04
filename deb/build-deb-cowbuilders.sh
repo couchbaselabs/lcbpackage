@@ -3,6 +3,10 @@ set -x
 set -e
 
 PARSE_SCRIPT=$(dirname $0)/../git-describe-parse/parse-git-describe.pl
+if [ $(echo "$@" | grep -q quick) ]
+then
+    QUICK=1
+fi
 
 make dist
 VERSION=$($PARSE_SCRIPT --tar)
@@ -37,8 +41,17 @@ fi
 mv $WORKSPACE/*.{dsc,tar.gz} $PWD
 rm -rf $WORKSPACE
 
-for DIST in lucid oneiric precise; do
-    for ARCH in i386 amd64; do
+if [ -z "$QUICK" ]
+then
+    DISTS=lucid
+    ARCHES=i386
+else
+    DISTS="lucid oneiric precise"
+    ARCHES="i386 amd64"
+fi
+
+for DIST in $DISTS; do
+    for ARCH in $ARCHES; do
         RESDIR=DIST/$DIST
         [ -d $RESDIR ] || mkdir -p $RESDIR
         sudo cowbuilder \
@@ -46,8 +59,15 @@ for DIST in lucid oneiric precise; do
             --basepath /var/cache/pbuilder/$DIST-$ARCH.cow \
             --buildresult $RESDIR \
             --debbuildopts -j20 \
-            --debbuildopts -sa \
-            $PKG_GPG_OPTS \
+            --debbuildopts "-us -uc" \
             libcouchbase_$DEB_VERSION.dsc
+        if [ -z "$NO_GPG" ]
+        then
+            dpkg-sig \
+                -k $GPG_KEY \
+                --sign builder \
+                --sign-changes full \
+                $RESDIR/*$ARCH*.changes
+        fi
     done
 done
