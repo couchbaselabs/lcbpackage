@@ -9,6 +9,7 @@ VERSION=$($PARSE_SCRIPT --tar)
 DEB_VERSION=$($PARSE_SCRIPT --deb)
 WORKSPACE=$PWD/build
 PKGDIR=$WORKSPACE/libcouchbase-$VERSION
+GPG_KEY=79CF7903
 
 mkdir -p $PKGDIR
 cp -r packaging/deb $PKGDIR/debian
@@ -25,6 +26,10 @@ dpkg-source -b .
 )
 mv $WORKSPACE/*.{dsc,tar.gz} $PWD
 rm -rf $WORKSPACE
+if [ -z "${NO_GPG}" ]
+then
+    export DEB_FLAGS="$DEB_FLAGS -sa -k$GPG_KEY"
+fi
 
 for DIST in lucid oneiric precise; do
     for ARCH in i386 amd64; do
@@ -38,4 +43,3 @@ for DIST in lucid oneiric precise; do
             libcouchbase_$DEB_VERSION.dsc
     done
 done
-

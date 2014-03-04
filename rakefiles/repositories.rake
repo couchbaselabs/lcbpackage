@@ -67,12 +67,20 @@
 #
 require 'pathname'
 
+if ENV['MASTER_IS_LOCAL'] 
+  COPY_TOOL='cp'
+  MASTER_HOST='/'
+else
+  MASTER_HOST="#{ENV['MASTER_HOST']}:"
+  COPY_TOOL='scp'
+end
+
 namespace :builder do
   desc "Check the builder readiness"
   task :check do
     abort if tool_is_missing("ssh -V", "openssh-client") ||
       tool_is_missing("gpg --version", "gnupg") ||
-      var_is_missing("MASTER_HOST")
+      (var_is_missing("MASTER_HOST") && var_is_missing("MASTER_IS_LOCAL"))
   end
 
   namespace :deb do
@@ -80,7 +88,7 @@ namespace :builder do
       desc "Upload DEB packages for Ubuntu #{dist}"
       task "upload:#{dist}" => :check do
         Dir["*.{changes,deb,dsc,tar.gz}"].each do |file|
-          sh("scp #{file} #{ENV['MASTER_HOST']}:#{ENV['PREFIX']}ubuntu/incoming/#{dist}")
+          sh("#{COPY_TOOL} #{file} #{MASTER_HOST}#{ENV['PREFIX']}ubuntu/incoming/#{dist}")
         end
       end
     end
@@ -91,7 +99,7 @@ namespace :builder do
       desc "Upload RPM packages for CentOS #{dist}"
       task "upload:centos#{dist}" => :check do
         Dir["*.rpm"].each do |file|
-          sh("scp #{file} #{ENV['MASTER_HOST']}:#{ENV['PREFIX']}rpm/#{dist}/incoming")
+          sh("#{COPY_TOOL} #{file} #{MASTER_HOST}#{ENV['PREFIX']}rpm/#{dist}/incoming")
         end
       end
     end
