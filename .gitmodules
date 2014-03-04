@@ -1,0 +1,3 @@
+[submodule "git-describe-parse"]
+	path = git-describe-parse
+	url = git://github.com/mnunberg/git-describe-parse
