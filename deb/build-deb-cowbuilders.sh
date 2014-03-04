@@ -2,7 +2,7 @@
 set -x
 set -e
 
-PARSE_SCRIPT=$(dirname $0)/git-describe-parse/parse-git-describe.pl
+PARSE_SCRIPT=$(dirname $0)/../git-describe-parse/parse-git-describe.pl
 
 make dist
 VERSION=$($PARSE_SCRIPT --tar)
