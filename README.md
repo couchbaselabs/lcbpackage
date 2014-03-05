@@ -1,3 +1,4 @@
+<!-- vim: set noexpandtab: --!>
 # Configuring
 
 Note that you need to clone the submodule for this repository as well
@@ -43,12 +44,10 @@ apt-get install \
 	cowbuilder \
 	approx \
 	ruby \
-	rubygems \
+	rake \
 	reprepro \
 	createrepo \
 	s3cmd
-	
-gem install rake
 ```
 
 ### Download ubuntu archive keyring
