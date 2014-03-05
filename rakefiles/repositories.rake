@@ -59,7 +59,7 @@
 # every 5 minutes
 #
 #   S3_PKG_MIRROR=s3://package.example.net
-#   GPG_KEY=872CF7D3
+#   DPKG_GPG_KEY=872CF7D3
 #   HOME=/home/master
 #   */5 * * * * /usr/bin/rake -g master:sync > /dev/null
 #
@@ -69,11 +69,13 @@ require 'pathname'
 
 if ENV['MASTER_IS_LOCAL'] 
   COPY_TOOL='cp'
-  MASTER_HOST='/'
+  MASTER_HOST=ENV['MASTER_HOST'] || ''
 else
   MASTER_HOST="#{ENV['MASTER_HOST']}:"
   COPY_TOOL='scp'
 end
+
+REPOROOT="#{MASTER_HOST}/#{ENV['LCB_REPO_PREFIX']}"
 
 namespace :builder do
   desc "Check the builder readiness"
@@ -88,7 +90,7 @@ namespace :builder do
       desc "Upload DEB packages for Ubuntu #{dist}"
       task "upload:#{dist}" => :check do
         Dir["*.{changes,deb,dsc,tar.gz}"].each do |file|
-          sh("#{COPY_TOOL} #{file} #{MASTER_HOST}#{ENV['PREFIX']}ubuntu/incoming/#{dist}")
+          sh("#{COPY_TOOL} #{file} #{REPOROOT}ubuntu/incoming/#{dist}")
         end
       end
     end
@@ -99,7 +101,7 @@ namespace :builder do
       desc "Upload RPM packages for CentOS #{dist}"
       task "upload:centos#{dist}" => :check do
         Dir["*.rpm"].each do |file|
-          sh("#{COPY_TOOL} #{file} #{MASTER_HOST}#{ENV['PREFIX']}rpm/#{dist}/incoming")
+          sh("#{COPY_TOOL} #{file} #{REPOROOT}rpm/#{dist}/incoming")
         end
       end
     end
@@ -113,8 +115,8 @@ namespace :master do
       var_is_missing("HOME") ||
       file_is_missing(File.join(File.dirname(__FILE__), 'sign_rpm.expect'), "copy sign_rpm.expect script to #{File.dirname(__FILE__)}")
     PREFIX = Pathname.new(ENV['HOME'])
-    if ENV['PREFIX']
-      PREFIX = PREFIX.join(ENV['PREFIX'])
+    if ENV['LCB_REPO_PREFIX']
+      PREFIX = PREFIX.join(ENV['LCB_REPO_PREFIX'])
     end
   end
 
@@ -133,7 +135,7 @@ namespace :master do
             mkdir_p(repo.join("incoming-deb", name))
             f.puts(<<-EOC.gsub(/^\s+/, ''))
               Origin: couchbase
-              SignWith: #{ENV['GPG_KEY']}
+              SignWith: #{ENV['DPKG_GPG_KEY']}
               Suite: #{name}
               Codename: #{name}
               Version: #{ver}

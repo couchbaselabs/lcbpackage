@@ -1,5 +1,5 @@
 # The local directory to server as the repository root
-export PREFIX=/repos/
+export LCB_REPO_PREFIX=/repos/
 
 # This indicates the master is local, not remote
 export MASTER_IS_LOCAL=1
@@ -18,4 +18,4 @@ export DEB_DISTROS="lucid oneiric precise"
 export QUICK_DEB_DISTROS=lucid
 
 export RPM_GPG_KEY=$GPG_KEY
-mkdir -p $PREFIX
+mkdir -p $LCB_REPO_PREFIX
