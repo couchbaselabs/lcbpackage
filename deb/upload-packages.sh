@@ -12,7 +12,7 @@ RAKEFILE=$SCRIPTPATH/../rakefiles/repositories.rake
 COMMON=$SCRIPTPATH/../common
 TOPDIR=$PWD
 
-. $COMMON/upload-vars.sh
+. $COMMON/vars.sh
 
 for DIST in lucid oneiric precise; do
     cd $TOPDIR/DIST/$DIST
