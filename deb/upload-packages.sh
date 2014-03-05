@@ -1,17 +1,20 @@
-#!/bin/sh
+#!/bin/bash
+set -x
+set -e
+pushd `dirname $0` > /dev/null
+SCRIPTPATH=`pwd`
+popd > /dev/null
 
 # Run from repository directory
 
-set -x
-set -e
 
-RAKEFILE=$(dirname $0)/../rakefiles/repositories.rake
-COMMON=$(dirname $0)/../common
+RAKEFILE=$SCRIPTPATH/../rakefiles/repositories.rake
+COMMON=$SCRIPTPATH/../common
 TOPDIR=$PWD
 
 . $COMMON/upload-vars.sh
 
 for DIST in lucid oneiric precise; do
-    cd DIST/$DIST
+    cd $TOPDIR/DIST/$DIST
     rake -f $RAKEFILE builder:deb:upload:$DIST
 done

@@ -41,7 +41,7 @@ fi
 mv $WORKSPACE/*.{dsc,tar.gz} $PWD
 rm -rf $WORKSPACE
 
-if [ -z "$QUICK" ]
+if [ -n "$QUICK" ]
 then
     DISTS=lucid
     ARCHES=i386
