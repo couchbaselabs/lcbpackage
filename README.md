@@ -23,6 +23,7 @@ key which is _different_ from the packaging key.
 
 * The public _Packaging_ GPG ID is **`79CF7903`**
 * The public _Repository_ GPG ID is **`D9223EDA`**
+* The public _RPM_ GPG ID is **`CD406E62`**
 
 
 # DEB (Debian, Ubuntu, etc.)
