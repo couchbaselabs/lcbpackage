@@ -152,34 +152,15 @@ inside a directory named `/repo` (i.e. relative to the root filesystem).
 This would assume running as the root user. You may choose to use a
 different directory if you do not wish to run as root.
 
-To initialize the repository structure
+The following script (run from within the `libcouchbase` directory) will
+set up a repository structure. It will also wipe any existing contents
+of the repository itself, so be careful with it.
 
-(_Run from this repository's directory_).
-
-```
-$ . common/vars.sh
-$ rake -f rakefiles/repositories.rake master:deb:seed
-```
-
-Once the repository has been initialized, you need to copy
-the files to the appropriate location in the treee
-
-(_Run from the libcouchbase repository_)
+It may be recommended to run this as a different user eventually..
 
 ```
-$ . ../lcbpackage/common/vars.sh
-$ ../lcbpackage/deb/upload-packages.sh
+$ ../lcbpackage/deb/mk-localrepo.sh
 ```
-
-Finally, to build the final repository layout:
-
-(_Run from this repository's directory_)
-
-```
-$ . common/vars.sh
-$ rake -f rakefiles/repositories.rake master:deb:import
-```
-
 
 RPM (CentOS, RHEL, SUSE, etc.)
 ==============================
