@@ -7,7 +7,21 @@ use File::Path;
 GetOptions(
     'm|mirror=s' => \(my $MIRROR = "http://localhost:9999/ubuntu"),
     'i|install=s' => \(my $PACKAGES = ""),
-    'U|update-only' => \(my $UPDATE_ONLY = 0));
+    'U|update-only' => \(my $UPDATE_ONLY = 0),
+    'h|help' => \(my $WANT_HELP = 0));
+
+if ($WANT_HELP) {
+    print <<EOF;
+
+Usage: setup-cowbuilders.pl <OPTIONS>
+
+ -m --mirror        Mirror to use for repository (default=$MIRROR)
+ -i --install       Packages to install
+ -U --update-only   Don't rebuild the image. Only install packages
+ -h --help          This message
+EOF
+    exit(0);
+}
 
 sub run_command {
     my $cmdstr = join(' ', @_);
