@@ -14,7 +14,7 @@ export DPKG_GPG_KEY=79CF7903
 export DEB_ARCHES="amd64 i386"
 export QUICK_DEB_ARCHES="amd64"
 
-export DEB_DISTROS="lucid oneiric precide"
+export DEB_DISTROS="lucid oneiric precise"
 export QUICK_DEB_DISTROS=lucid
 
 export RPM_GPG_KEY=$GPG_KEY
