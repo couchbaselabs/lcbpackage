@@ -50,6 +50,9 @@ apt-get install \
 	s3cmd
 ```
 
+For testing the repository layout itself you will also need a 
+webserver.
+
 ### Download ubuntu archive keyring
 
 ```
@@ -134,7 +137,49 @@ Once done, you can configure your builder as a 'master'.
 
 ## Configuring a Repository
 
-TODO
+Creating the repository allows you to create a and use this layout as
+a source for `apt-get` and friends. The steps involve:
+
+1. Selecting a directory to act as the repository root
+2. Creating the repository structure within that directory
+3. Signing the repository metadata
+4. Copying the built packages into the repository
+5. Configuring a webserver to serve from the repository
+
+The default configuration for repositories may be found inside
+the `common/vars.sh`. By default the repository structure is created
+inside a directory named `/repo` (i.e. relative to the root filesystem).
+This would assume running as the root user. You may choose to use a
+different directory if you do not wish to run as root.
+
+To initialize the repository structure
+
+(_Run from this repository's directory_).
+
+```
+$ . common/vars.sh
+$ rake -f rakefiles/repositories.rake master:deb:seed
+```
+
+Once the repository has been initialized, you need to copy
+the files to the appropriate location in the treee
+
+(_Run from the libcouchbase repository_)
+
+```
+$ . ../lcbpackage/common/vars.sh
+$ ../lcbpackage/deb/upload-packages.sh
+```
+
+Finally, to build the final repository layout:
+
+(_Run from this repository's directory_)
+
+```
+$ . common/vars.sh
+$ rake -f rakefiles/repositories.rake master:deb:import
+```
+
 
 RPM (CentOS, RHEL, SUSE, etc.)
 ==============================
