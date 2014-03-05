@@ -111,8 +111,7 @@ end
 namespace :master do
   desc "Check the master readiness"
   task :check do
-    abort if tool_is_missing("reprepro --version", "reprepro") ||
-      var_is_missing("HOME") ||
+    abort if var_is_missing("HOME") ||
       file_is_missing(File.join(File.dirname(__FILE__), 'sign_rpm.expect'), "copy sign_rpm.expect script to #{File.dirname(__FILE__)}")
     PREFIX = Pathname.new(ENV['HOME'])
     if ENV['LCB_REPO_PREFIX']
@@ -199,7 +198,7 @@ namespace :master do
           mkdir_p(repo.join(ver, "incoming"))
           ["i686", "i386", "x86_64", "SRPMS"].each do |arch|
             mkdir_p(repo.join(ver, arch))
-            sh("createrepo --checksum sha1 #{repo.join(ver, arch)}")
+            sh("createrepo --checksum sha #{repo.join(ver, arch)}")
           end
         end
         touch(repo.join(".checkpoint"))
@@ -222,7 +221,7 @@ namespace :master do
           end
           puts repo.join(ver, target)
           if File.exists?(repo.join(ver, target))
-            sh("createrepo --update --checksum sha1 #{repo.join(ver, target)}")
+            sh("createrepo --update --checksum sha #{repo.join(ver, target)}")
           end
         end
       end
