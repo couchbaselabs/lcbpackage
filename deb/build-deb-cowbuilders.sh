@@ -12,7 +12,7 @@ then
     QUICK=1
 fi
 
-. $SRCIPTPATH/../common/vars.sh
+. $SCRIPTPATH/../common/vars.sh
 
 make dist
 VERSION=$($PARSE_SCRIPT --tar)
