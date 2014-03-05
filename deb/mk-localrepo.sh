@@ -16,7 +16,7 @@ TOPDIR=$PWD
 rm -rf $LCB_REPO_PREFIX
 rake -f $RAKEFILE master:deb:seed
 
-for DIST in lucid oneiric precise; do
+for DIST in $DEB_DISTROS; do
     cd $TOPDIR/DIST/$DIST
     rake -f $RAKEFILE builder:deb:upload:$DIST
 done
