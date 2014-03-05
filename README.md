@@ -163,55 +163,93 @@ It may be recommended to run this as a different user eventually..
 $ ../lcbpackage/deb/mk-localrepo.sh
 ```
 
-RPM (CentOS, RHEL, SUSE, etc.)
-==============================
+# RPM (CentOS, RHEL, SUSE, etc.)
 
-Prerequisites
--------------
+## Prerequisites
+
+### Mock
+
+In RPM-land, the building itself is performed via the `mock` tool which
+sets up a bunch of chroots and invokes the builds inside those 
+directories.
+
+Most of the routine commands do not need root access
+
+Install the mock:
+
+```
+sudo yum install mock
+```
+
+Add your user to the `mock` group
+
+```
+sudo usermod -a -G mock $(whoami)
+```
+
+Initiate a new shell with the group applied (or just exit and log
+back in)
+
+```
+newgrp mock
+```
+
+The mock needs to operate on a bunch of configuration files.
+You need to place these files in `/etc/mock`. The files themselves
+are located in the `rpm/mock` directory within the repository:
+
+```
+sudo cp rpm/mock/* /etc/mock
+```
+
+Once you have copied all the configuration files, you can initialize
+the base chroots for each environment. This may take some time
+
+```
+./rpm/init-mocks.sh --init
+```
+
+## Building Packages
+
+The process of building packages consists of:
+
+1. Generating a `.spec` and `.src.rpm` file
+2. Telling `mock` about those files and building them
+
+The following commands should be executed from the `libcouchbase`
+repository. We assume the `lcbpackage` repository is a sibling of
+the `libcouchbase` repository.
+
+**Ensure any existing `.spec` and `.rpm` files are removed
+from the working directory**
+
+```
+rm -f *.{spec,rpm}
+```
 
 
-* Install mock
+```
+./config/autorun.sh
+./configure --disable-plugins --disable-couchbasemock
+make dist
+../lcbpackage/rpm/genspec.sh
+```
 
-    yum install mock
+Assuming you've actually removed the `.spec` and `.rpms` from previous
+runs (if any), you can just run
 
-* Add user to 'mock' group
+```
+../lcbpackage/rpm/build-rpms.sh *.rpm
+```
 
-    usermod -a -G mock [User name] && newgrp mock
+This will run for some time and will output the resulting RPMs inside
+the `DIST` directory.
 
-* Setup configurations
+To sign and create a repository:
 
-    cp packaging/rpm/mock/* /etc/mock
+```
+../lcbpackage/rpm/mk-localrepo.sh
+```
 
-* Initialize chroot.
-
-    for CONFIG in centos-5-i386 centos-5-x86_64 centos-6-i386 centos-6-x86_64; do
-        mock -r $CONFIG --init
-    done
-
-Build Packages
---------------
-
-* Generate
-
-    VERSION=$(git describe | awk -F- '{ print $1 }')
-    RELEASE=$(git describe | awk -F- '{ print $2"_"$3 }')
-    if [ "$RELEASE" = "_"]
-    then
-        RELEASE = 1;
-        TARNAME="%{name}-%{version}"
-    else
-        TARNAME="%{name}-%{version}_%{release}"
-    fi
-    sed "s/@VERSION@/${VERSION}/g;s/@RELEASE@/${RELEASE}/g;s/@TARREDAS@/${TARNAME}/g" < packaging/rpm/libcouchbase.spec.in > libcouchbase.spec
-    rpmbuild -bs --nodeps \
-             --define "_source_filedigest_algorithm md5" \
-             --define "_binary_filedigest_algorithm md5" \
-             --define "_topdir ${PWD}" \
-             --define "_sourcedir ${PWD}" \
-             --define "_srcrpmdir ${PWD}" libcouchbase.spec
-
-* Run the build
-
-    for CONFIG in centos-5-i386 centos-5-x86_64 centos-6-i386 centos-6-x86_64; do
-        mock -r $CONFIG --rebuild --resultdir=$HOME/input/$CONFIG libcouchbase-$VERSION-$RELEASE.src.rpm
-    done
+Which will place the resulting files inside the `LCB_REPO_PREFIX` path
+as determined by the setting in `common/vars.sh`
