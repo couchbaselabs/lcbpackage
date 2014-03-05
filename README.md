@@ -69,6 +69,9 @@ ubuntu      http://ftp.ubuntu.com/ubuntu
 Note that you can skip the _approx_ installation, but this will potentially
 mean multiple un-necessary downloads as you configure your builders.
 
+If you _do_ choose to skip _approx_ then you will need to specify a mirror
+in the script (later on), as the script will by default look for a repository
+on `localhost:9999` (default approx listening port).
 
 ## Configuring Builders
 
