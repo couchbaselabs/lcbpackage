@@ -110,14 +110,7 @@ namespace :master do
   desc "Check the master readiness"
   task :check do
     abort if tool_is_missing("reprepro --version", "reprepro") ||
-      tool_is_missing("s3cmd --version", "s3cmd") ||
-      tool_is_missing("createrepo --version", "createrepo") ||
-      tool_is_missing("gpg --version", "gnupg") ||
-      tool_is_missing("expect -v", "expect") ||
-      var_is_missing("S3_PKG_MIRROR") ||
-      (var_is_missing("GPG_KEY") && var_is_missing("RPM_GPG_KEY")) ||
       var_is_missing("HOME") ||
-      file_is_missing(File.join(ENV['HOME'], '.s3cfg'), "run 's3cmd --configure' to create") ||
       file_is_missing(File.join(File.dirname(__FILE__), 'sign_rpm.expect'), "copy sign_rpm.expect script to #{File.dirname(__FILE__)}")
     PREFIX = Pathname.new(ENV['HOME'])
     if ENV['PREFIX']
