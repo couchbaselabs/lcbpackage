@@ -62,12 +62,8 @@ for DIST in $DISTS; do
             --debbuildopts "-us -uc" \
             libcouchbase_$DEB_VERSION.dsc
         if [ -z "$NO_GPG" ]
-        then
-            dpkg-sig \
-                -k $GPG_KEY \
-                --sign builder \
-                --sign-changes full \
-                $RESDIR/*$ARCH*.changes
+        then debsign -k $GPG_KEY --no-re-sign \
+            $RESDIR/*$ARCH*.changes $RESDIR/*.dsc
         fi
     done
 done
