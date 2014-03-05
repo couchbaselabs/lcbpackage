@@ -23,12 +23,10 @@ for DIST in $RPM_RELNOS; do
     else
         rakedist="6.2"
     fi
-    for pkg in *.rpm; do
-        yes '' | rpm --resign \
-            -D "_signature gpg" \
-            -D "_gpg_name $RPM_GPG_KEY" \
-            $pkg
-        done
+    for pkg in *.rpm
+    do
+        expect $SCRIPTPATH/sign_rpm.expect $RPM_GPG_KEY $pkg
+    done
     rake -f $RAKEFILE builder:rpm:upload:centos$rakedist
 done
 

@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+set gpgName [lrange $argv 0 0]
+set pkgName [lrange $argv 1 1]
+spawn rpm --resign -D "_signature gpg" -D "_gpg_name $gpgName" $pkgName
+expect -exact "Enter pass phrase: "
+send -- "\r"
+expect eof
+wait

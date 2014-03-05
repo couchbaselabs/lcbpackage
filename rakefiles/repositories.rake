@@ -111,8 +111,7 @@ end
 namespace :master do
   desc "Check the master readiness"
   task :check do
-    abort if var_is_missing("HOME") ||
-      file_is_missing(File.join(File.dirname(__FILE__), 'sign_rpm.expect'), "copy sign_rpm.expect script to #{File.dirname(__FILE__)}")
+    abort if var_is_missing("HOME")
     PREFIX = Pathname.new(ENV['HOME'])
     if ENV['LCB_REPO_PREFIX']
       PREFIX = PREFIX.join(ENV['LCB_REPO_PREFIX'])
@@ -231,7 +230,6 @@ namespace :master do
     task :sign => :seed do
       repo = PREFIX.join("rpm")
       abort if var_is_missing('RPM_GPG_KEY')
-      sh("expect #{File.join(File.dirname(__FILE__), "sign_rpm.expect")} #{ENV['RPM_GPG_KEY']} #{repo}")
       ["5.5", "6.2"].each do |ver|
         ['SRPMS', 'x86_64', 'i386', 'i686'].each do |target|
           if File.exists?(repo.join(ver, target, 'repodata/repomd.xml'))
