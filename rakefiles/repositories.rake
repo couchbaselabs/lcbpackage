@@ -135,7 +135,7 @@ namespace :master do
             mkdir_p(repo.join("incoming-deb", name))
             f.puts(<<-EOC.gsub(/^\s+/, ''))
               Origin: couchbase
-              SignWith: #{ENV['DPKG_GPG_KEY']}
+              SignWith: #{ENV['APT_GPG_KEY']}
               Suite: #{name}
               Codename: #{name}
               Version: #{ver}
