@@ -1,4 +1,5 @@
-<!-- vim: set noexpandtab: --!>
+<!--- vim: set noexpandtab: -->
+
 # Configuring
 
 Note that you need to clone the submodule for this repository as well
