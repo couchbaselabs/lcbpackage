@@ -35,6 +35,11 @@ of the options it takes are passed directly to it.
 
 ## Prerequisites
 
+Note that there is a bug in pbuilder (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=627086)
+which is only fixed in Ubuntu 12.04 (or debian equivalent). As such it is
+recommended to not use an older version.
+
+
 ```
 apt-get install \
 	build-essential \
