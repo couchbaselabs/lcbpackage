@@ -153,9 +153,11 @@ a source for `apt-get` and friends. The steps involve:
 4. Copying the built packages into the repository
 5. Configuring a webserver to serve from the repository
 
+### Create Directory Structure
+
 The default configuration for repositories may be found inside
 the `common/vars.sh`. By default the repository structure is created
-inside a directory named `/repo` (i.e. relative to the root filesystem).
+inside a directory named `/repo` (i.e. relative to the current `$HOME`).
 This would assume running as the root user. You may choose to use a
 different directory if you do not wish to run as root.
 
@@ -168,6 +170,99 @@ It may be recommended to run this as a different user eventually..
 ```
 $ ../lcbpackage/deb/mk-localrepo.sh
 ```
+
+
+### Configuring Apache
+
+Once you have the structure set up, configure the webserver. On Debian this is
+done via apache. We'll use a simple setup and ignore security as this is a local
+setup anyway:
+
+```
+$ vim /etc/apache2/sites-enabled/000-default
+```
+
+Change the `DocumentRoot` to `/root/repos`; also change the
+`<Directory>` directive to use `/root/repos` instead of `/var/www`.
+
+Also ensure your `$HOME` is traversable:
+
+```
+$ chmod a+x $HOME
+```
+
+Now, reload your webserver
+
+```
+$ service apache2 reload
+```
+
+### Testing the Repository
+
+First verify you are able to see the contents of the repository with a tool like
+curl (or your web browser).
+
+Once done, follow the instructions on http://www.couchbase.com/communities/c-client-library.
+
+#### Common Steps
+
+Before running any of the tests, ensure any references of libcouchbase are not
+present:
+
+```
+$ dpkg -P 'libcouchbase*'
+```
+
+which will completely unconfigure and remove any prior installs
+
+#### Testing fresh installs
+
+Uncomment the `packages.couchbase.com` URL in the `couchbase.list` file downloaded
+above; copy the line, and replace the URL with localhost.
+
+Then
+
+```
+$ apt-get update
+$ apt-get install libcouchbase2 libcouchbase2-libevent libcouchbase-dev libcouchbase2-bin
+```
+
+Check `cbc` reports proper version
+
+```
+$ cbc version
+```
+
+Then verify the development headers are sound as well, by compiling an SDK
+against it. Typically I use Python
+
+```
+$ apt-get install python-dev
+$ git clone git://github.com/couchbase/couchbase-python-client.git
+$ cd couchbase-python-client
+$ python setup.py build_ext
+```
+
+#### Testing upgrades
+
+Uncomment the original entry in `couchbase.list` to restore the current upstream
+repository. Then
+
+```
+$ apt-get update
+$ apt-get install libcouchbase2 libcouchbase2-libevent libcouchbase-dev libcouchbase2-bin
+```
+
+Verify that the older version is actually being used:
+
+```
+$ cbc version
+```
+
+Now perform the same steps as in the "Fresh Install" section. The result should
+be identical.
+
+
 
 # RPM (CentOS, RHEL, SUSE, etc.)
 
