@@ -1,0 +1,68 @@
+<!-- vim: set sw=2 ts=2: -->
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Couchbase C Client Archives</title>
+    <style>
+      table,th,td {
+        border: 1px solid gray;
+
+      }
+      td {
+        padding-right: 10px;
+        padding-left: 3px;
+      }
+      a.fname {
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Couchbase C Client Archives</h1>
+
+    This contains a full listing of release versions of the C client library
+    (<i>libcouchbase</i>). The most current package and installation information
+    can be found at <a href="http://couchbase.com/communities/c">
+      http://couchbase.com/communities/c</a>
+
+    <h2>Using</h2>
+    This page contains links to all versions of libcouchbase. For Debian and
+    Redhat-based systems these files are present as native archives wrapped
+    inside tar archives. Thus in such a scenario, one would do:
+    <pre>
+# tar xf libcouchbase-2.2.0-centos62_x86_64.tar
+# cd libcouchbase-2.2.0-centos62_x86_64.tar
+# rpm -ivh ...
+    </pre>
+    It may also be necessary to remove your existing packages, otherwise some
+    package managers will complain about downgrading.
+    <h2>Quick Links by Version</h2>
+    <ul>
+      {% for version in versions %}
+      <li><a href="#{{version.verstr}}">{{version.display}}</a></li>
+      {% endfor %}
+    </ul>
+
+    {% for version in versions %}
+    <a id="{{version.verstr}}"></a>
+    <h3>Version {{version.display}} (<a href="https://github.com/couchbase/libcouchbase/blob/{{version.display}}/RELEASE_NOTES.markdown">Release Notes</a>)</h3>
+    <table>
+      <tr>
+        <th>Platform</th>
+        <th>Arhictecutre</th>
+        <th>File</th>
+      </tr>
+      {% for target in targets %}
+      {% for arch in ('x86', 'x64') %}
+      <tr>
+        <td>{{target.display_version}}</td>
+        <td style="text-align: center">{{arch}}</td>
+        {% set filename=target.get_filename(version.display, arch) %}
+        <td><a class="fname" href="http://packages.couchbase.com/clients/c/{{filename}}">{{filename}}</a></td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </table>
+    {% endfor %}
+  </body>
+</html>
