@@ -8,6 +8,7 @@ GetOptions(
     'm|mirror=s' => \(my $MIRROR = "http://localhost:9999/ubuntu"),
     'i|install=s' => \(my $PACKAGES = ""),
     'U|update-only' => \(my $UPDATE_ONLY = 0),
+    'R|root=s' => \(my $INST_ROOT = "/var/cache/pbuilder"),
     'h|help' => \(my $WANT_HELP = 0));
 
 if ($WANT_HELP) {
@@ -34,7 +35,7 @@ sub run_command {
 
 sub gen_basepath {
     my ($dist,$arch) = @_;
-    return "/var/cache/pbuilder/$dist-$arch.cow";
+    return "$INST_ROOT/$dist-$arch.cow";
 }
 
 sub install_packages {
