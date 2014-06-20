@@ -9,6 +9,7 @@ GetOptions(
     'i|install=s' => \(my $PACKAGES = ""),
     'U|update-only' => \(my $UPDATE_ONLY = 0),
     'R|root=s' => \(my $INST_ROOT = "/var/cache/pbuilder"),
+    'D|dists=s' => \(my $DIST_LIST = "lucid,precise,trusty"),
     'h|help' => \(my $WANT_HELP = 0));
 
 if ($WANT_HELP) {
@@ -79,12 +80,7 @@ my @ARCHES=(
     'i386',
     'amd64'
 );
-
-my @DISTS = (
-    'lucid',
-    'precise',
-    'trusty'
-);
+my @DISTS = split(',', $DIST_LIST);
 
 foreach my $dist (@DISTS) {
     foreach my $arch (@ARCHES) {
