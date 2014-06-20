@@ -82,8 +82,8 @@ my @ARCHES=(
 
 my @DISTS = (
     'lucid',
-    'oneiric',
     'precise',
+    'trusty'
 );
 
 foreach my $dist (@DISTS) {
