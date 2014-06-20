@@ -354,9 +354,136 @@ the `DIST` directory.
 
 To sign and create a repository:
 
+## Generating a Repository
+
 ```
 ../lcbpackage/rpm/mk-localrepo.sh
 ```
 
 Which will place the resulting files inside the `LCB_REPO_PREFIX` path
 as determined by the setting in `common/vars.sh`
+
+
+Once this is done you will want to install apache.
+
+### Configuring Apache
+
+```
+$ sudo yum -y install httpd
+$ sudo service httpd start
+```
+
+Now configure apache to allow for a user directory. This disabled by default.
+
+Edit the `/etc/httpd/conf/httpd.conf` file. Search for the `UserDir` directive.
+It should look like:
+
+```
+ # UserDir public_html
+```
+
+and uncomment this line.
+
+Now you should also enable symlinks as we will symlink the `repos` directory
+to `public_html` (later).
+
+Create this section in `httpd.conf`
+
+```
+<Directory /home/*/public_html>
+	AllowOverride Indexes
+	Options Indexes SymLinksIfOwnerMatch
+</Directory>
+```
+
+Now that you are done, reload apache
+
+```
+$ sudo service httpd reload
+```
+
+Go back to your home directory:
+
+```
+$ ln -s repos public_html
+```
+
+**Make sure `selinux` is disabled or you will get odd errors**.
+To check if it's enabled
+```
+$ selinuxenabled && echo "Have selinux on"
+```
+
+If it _is_ enabled, modify `/etc/selinux/config`. Ensure that
+`SELINUX=disabled` rather than `enforcing` or `permissive`.
+If you needed to make modifications to the host then reboot it. Selinux will
+not be disabled until the machine has been rebooted.
+
+To verify that this all works, navigate to `http://${host}/~${user}` and you
+should see a top-level `rpm` directory. Replace `${host}` with the visible
+IP accessible to your HTTP client and `${user}` with the user that you are
+building with.
+
+### Testing Installs
+
+To test installs, first download the template `couchbase.repo` file
+following the _Getting Started_ guide on the "C Community" portal:
+http://www.couchbase.com/communities/c-client-library
+
+```
+$ sudo wget -O \
+	/etc/yum.repos.d/couchbase.repo \
+	http://packages.couchbase.com/rpm/couchbase-centos62-x86_64.repo
+```
+
+Copy this file like so:
+
+```
+$ sudo cp /etc/yum.repos.d/couchbase.repo /etc/yum.repos.d/couchbase-local.repo
+```
+
+
+Then edit the `couchbase-local` repo. The line saying `[couchbase]`
+should be modified to `[couchbase-local]`.
+
+Before proceeding, remove any existing installs.
+
+```
+$ sudo yum remove 'libcouchbase*'
+```
+
+To test a fresh install, disable the old upstream repo:
+
+```
+$ sudo yum --disablerepo couchbase install \
+	libcouchbase2 libcouchbase2-libevent libcouchbase2-bin libcouchbase-devel
+```
+
+Run `cbc` to see if we have the right version installed
+
+```
+$ cbc version
+```
+
+Now try to compile an SDK:
+
+```
+$ git clone git://github.com/couchbase/couchbase-python-client.git
+$ cd couchbase-python-client
+$ python setup.py build_ext
+```
+
+To test an upgrade, first remove any existing installations, as above.
+
+Then install from the upstream:
+
+```
+$ sudo yum --disablerepo couchbase-local install \
+	libcouchbase2 libcouchbase2-libevent libcouchbase2-bin libcouchbase-devel
+```
+
+Again, verify the correct version with `cbc`
+
+```
+$ cbc version
+```
