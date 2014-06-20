@@ -36,7 +36,6 @@
 # master@masternode.com)
 #
 #   * rake -g builder:deb:upload:lucid
-#   * rake -g builder:deb:upload:oneiric
 #   * rake -g builder:deb:upload:sid
 #   * rake -g builder:rpm:upload:centos5.5
 #   * rake -g builder:rpm:upload:centos6.2
@@ -86,7 +85,7 @@ namespace :builder do
   end
 
   namespace :deb do
-    ["lucid", "oneiric", "precise"].each do |dist|
+    ["lucid", "trusty", "precise"].each do |dist|
       desc "Upload DEB packages for Ubuntu #{dist}"
       task "upload:#{dist}" => :check do
         Dir["*.{changes,deb,dsc,tar.gz}"].each do |file|
@@ -124,7 +123,7 @@ namespace :master do
       repo = PREFIX.join("ubuntu")
       unless repo.join(".checkpoint").exist?
         mkdir_p(repo.join("conf"))
-        ubuntu_dists = {"lucid" => "10.04", "oneiric" => "11.10", "precise" => "12.04"}
+        ubuntu_dists = {"lucid" => "10.04", "trusty" => "14.04", "precise" => "12.04"}
         File.open(repo.join("conf", "distributions"), "w+") do |f|
           ubuntu_dists.each do |name, ver|
             mkdir_p(repo.join("pool"))
