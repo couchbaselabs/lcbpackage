@@ -310,6 +310,12 @@ the base chroots for each environment. This may take some time
 ./rpm/init-mocks.sh --init
 ```
 
+### Other Tools
+
+```
+yum -y install rubygem-rake expect
+```
+
 ## Building Packages
 
 The process of building packages consists of:
