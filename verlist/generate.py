@@ -55,6 +55,8 @@ class RedhatTarget(object):
                 arch = 'i386'
             else:
                 arch = 'i686'
+        else:
+            arch = 'x86_64'
         return "libcouchbase-{0}_{1}_{2}.tar".format(lcbvers, self.version, arch)
 
 class SourceTarget(object):
