@@ -52,6 +52,12 @@
         <th>Arhictecutre</th>
         <th>File</th>
       </tr>
+      <tr>
+        <td>Source Archive</td>
+        <td style="text-align: center">Any</td>
+        {% set filename=tarball.get_filename(version.display, None) %}
+        <td><a class="fname" href="http://packages.couchbase.com/clients/c/{{filename}}">{{filename}}</a></td>
+      </tr>
       {% for target in targets %}
       {% for arch in ('x86', 'x64') %}
       <tr>
