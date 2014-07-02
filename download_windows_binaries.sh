@@ -10,7 +10,7 @@ for arch in $ARCHES; do
             url="$URIBASE/ARCH=$arch,MSVCC_VER=$vers,label=sdk_win2008_${hostarch}/ws/BUILD"
             url="${url}/libcouchbase-${LCBVERS}_${arch}_vc${vers}.zip"
             echo $url
-            wget --no-verbose "$url"
+            wget "$url"
         done
     done
 done
