@@ -13,7 +13,7 @@ TOPDIR=$PWD
 
 . $COMMON/vars.sh
 
-rm -rf $LCB_REPO_PREFIX
+rm -rf $LCB_REPO_PREFIX/ubuntu
 rake -f $RAKEFILE master:deb:seed
 
 for DIST in $DEB_DISTROS; do

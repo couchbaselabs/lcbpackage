@@ -13,7 +13,7 @@ TOPDIR=$PWD
 
 . $COMMON/vars.sh
 
-rm -rf $LCB_REPO_PREFIX
+rm -rf $LCB_REPO_PREFIX/rpm
 rake -f $RAKEFILE master:rpm:seed
 
 for DIST in $RPM_RELNOS; do
