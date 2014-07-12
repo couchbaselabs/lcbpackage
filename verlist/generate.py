@@ -12,6 +12,7 @@ VERSIONS = [
         VersionInfo('lcb_220', '2.2.0'),
         VersionInfo('lcb_230', '2.3.0'),
         VersionInfo('lcb_231', '2.3.1'),
+        VersionInfo('lcb_232', '2.3.2'),
         VersionInfo('lcb_240dp1', '2.4.0-dp1')
 ]
 
@@ -23,7 +24,9 @@ class UbuntuTarget(object):
         self.display_version = display_version
 
     def get_filename(self, lcbvers, arch):
-        if int(lcbvers[2]) < 4 and self.version == '1404':
+        nums = "".join(["{0:02}".format(int(x)) for x in  lcbvers.split("-")[0].split(".")])
+        verstr = int(nums, 16)
+        if verstr < 0x020302 and self.version == '1404':
             return "N/A";
 
         if arch == 'x86':
