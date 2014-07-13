@@ -192,7 +192,7 @@ namespace :master do
     task :seed => :check do
       repo = PREFIX.join("rpm")
       unless repo.join(".checkpoint").exist?
-        ["5.5", "6.2"].each do |ver|
+        ["5.5", "6.2", "7"].each do |ver|
           mkdir_p(repo.join(ver, "incoming"))
           ["i686", "i386", "x86_64", "SRPMS"].each do |arch|
             mkdir_p(repo.join(ver, arch))
@@ -206,7 +206,7 @@ namespace :master do
     desc "Import RPM packages from incoming queues"
     task :import => :seed do
       repo = PREFIX.join("rpm")
-      ["5.5", "6.2"].each do |ver|
+      ["5.5", "6.2", "7"].each do |ver|
         incoming = repo.join(ver, 'incoming')
         map = {'*.src.rpm' => 'SRPMS',
                '*.x86_64.rpm' => 'x86_64',
@@ -229,7 +229,7 @@ namespace :master do
     task :sign => :seed do
       repo = PREFIX.join("rpm")
       abort if var_is_missing('RPM_GPG_KEY')
-      ["5.5", "6.2"].each do |ver|
+      ["5.5", "6.2", "7"].each do |ver|
         ['SRPMS', 'x86_64', 'i386', 'i686'].each do |target|
           if File.exists?(repo.join(ver, target, 'repodata/repomd.xml'))
             sh("gpg --batch --yes -u #{ENV['RPM_GPG_KEY']} --detach-sign --armor #{repo.join(ver, target, 'repodata/repomd.xml')}")

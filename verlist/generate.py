@@ -18,15 +18,19 @@ VERSIONS = [
 
 VERSIONS = list(reversed(VERSIONS))
 
+def mk_hexvers(lcbvers):
+    nums = "".join(["{0:02}".format(int(x)) for x in  lcbvers.split("-")[0].split(".")])
+    verstr = int(nums, 16)
+    return verstr
+
+
 class UbuntuTarget(object):
     def __init__(self, version, display_version):
         self.version = version
         self.display_version = display_version
 
     def get_filename(self, lcbvers, arch):
-        nums = "".join(["{0:02}".format(int(x)) for x in  lcbvers.split("-")[0].split(".")])
-        verstr = int(nums, 16)
-        if verstr < 0x020302 and self.version == '1404':
+        if mk_hexvers(lcbvers) < 0x020302 and self.version == '1404':
             return "N/A";
 
         if arch == 'x86':
@@ -53,7 +57,13 @@ class RedhatTarget(object):
         self.display_version = display_version
 
     def get_filename(self, lcbvers, arch):
+        if self.version.startswith('centos7') and mk_hexvers(lcbvers) < 0x020400:
+            return "N/A"
+
         if arch == 'x86':
+            if self.version.startswith('centos7'):
+                return 'N/A' # No 32 bit builds for EL7
+
             if self.version.startswith('centos5'):
                 arch = 'i386'
             else:
@@ -76,6 +86,7 @@ TARGETS = (
         UbuntuTarget('1404', 'Ubuntu 14.04'),
         RedhatTarget('centos55', 'Enterprise Linux 5'),
         RedhatTarget('centos62', 'Enterprise Linux 6'),
+        RedhatTarget('centos7', 'Enterprise Linux 7'),
         WindowsTarget('vc9', 'Visual Studio 2008'),
         WindowsTarget('vc10', 'Visual Studio 2010'),
         WindowsTarget('vc11', 'Visual Studio 2012'),

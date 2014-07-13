@@ -60,12 +60,14 @@
       </tr>
       {% for target in targets %}
       {% for arch in ('x86', 'x64') %}
+      {% set filename=target.get_filename(version.display, arch) %}
+      {% if filename != 'N/A' %}
       <tr>
         <td>{{target.display_version}}</td>
         <td style="text-align: center">{{arch}}</td>
-        {% set filename=target.get_filename(version.display, arch) %}
         <td><a class="fname" href="http://packages.couchbase.com/clients/c/{{filename}}">{{filename}}</a></td>
       </tr>
+      {% endif %}
       {% endfor %}
       {% endfor %}
     </table>

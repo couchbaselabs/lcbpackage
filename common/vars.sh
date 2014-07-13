@@ -18,7 +18,7 @@ export DEB_DISTROS="lucid precise trusty"
 export QUICK_DEB_DISTROS=lucid
 
 export RPM_ARCHES="x86_64 i386"
-export RPM_RELNOS="5 6"
+export RPM_RELNOS="5 6 7"
 export QUICK_RPM_ARCHES=x86_64
 export QUICK_RPM_RELNOS=6
 
