@@ -1,6 +1,6 @@
 #!/bin/bash
-set -x
 set -e
+
 pushd `dirname $0` > /dev/null
 SCRIPTPATH=`pwd`
 popd > /dev/null
@@ -20,8 +20,10 @@ for DIST in $RPM_RELNOS; do
     cd $TOPDIR/DIST/el$DIST
     if [ $DIST = "5" ]; then
         rakedist="5.5"
-    else
+    elif [ $DIST = "6" ]; then
         rakedist="6.2"
+    else
+        rakedist="7"
     fi
     for pkg in *.rpm
     do

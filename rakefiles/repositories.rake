@@ -96,7 +96,7 @@ namespace :builder do
   end
 
   namespace :rpm do
-    ["5.5", "6.2"].each do |dist|
+    ["5.5", "6.2", "7"].each do |dist|
       desc "Upload RPM packages for CentOS #{dist}"
       task "upload:centos#{dist}" => :check do
         Dir["*.rpm"].each do |file|

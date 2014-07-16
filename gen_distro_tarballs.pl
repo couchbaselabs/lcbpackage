@@ -37,6 +37,13 @@ my %RPMSPECS = (
             my $name = shift;
             return $name eq 'x86' ? 'i686' : 'x86_64';
         }
+    },
+    '7' => {
+        suffix => 'rpm',
+        dist => 'centos7',
+        search_path => "$RPMDIR/7",
+        arch_tar => sub { 'x86_64' },
+        arch_pkg => sub { 'x86_64' }
     }
 );
 
@@ -86,6 +93,9 @@ mkpath($OUT_DIR);
 foreach my $spec (@SPECS) {
     # Generate the output name
     foreach my $arch (@ARCHES) {
+        if ($arch eq 'x86' && $spec->{suffix} eq 'rpm' && $spec->{dist} eq 'centos7') {
+            next;
+        }
         my $output_name = sprintf("libcouchbase-%s_%s_%s",
             $VERSION, $spec->{dist}, $spec->{arch_tar}->($arch));
         print "Output Name: $output_name\n";
