@@ -51,6 +51,9 @@ fi
 
 mv $WORKSPACE/*.{dsc,tar.gz} $PWD
 rm -rf $WORKSPACE
+if [ -z "$PBROOT" ]; then
+    PBROOT=/var/cache/pbuilder
+fi
 
 if [ -n "$QUICK" ]
 then
@@ -67,7 +70,7 @@ for DIST in $DISTS; do
         [ -d $RESDIR ] || mkdir -p $RESDIR
         sudo cowbuilder \
             --build \
-            --basepath /var/cache/pbuilder/$DIST-$ARCH.cow \
+            --basepath $PBROOT/$DIST-$ARCH.cow \
             --buildresult $RESDIR \
             --debbuildopts -j20 \
             --debbuildopts "-us -uc" \
