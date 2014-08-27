@@ -13,7 +13,8 @@ VERSIONS = [
         VersionInfo('lcb_230', '2.3.0'),
         VersionInfo('lcb_231', '2.3.1'),
         VersionInfo('lcb_232', '2.3.2'),
-        VersionInfo('lcb_240', '2.4.0')
+        VersionInfo('lcb_240', '2.4.0'),
+        VersionInfo('lcb_241', '2.4.1')
 ]
 
 VERSIONS = list(reversed(VERSIONS))
