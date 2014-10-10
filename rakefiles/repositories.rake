@@ -85,7 +85,7 @@ namespace :builder do
   end
 
   namespace :deb do
-    ["lucid", "trusty", "precise"].each do |dist|
+    ["lucid", "trusty", "precise", "wheezy"].each do |dist|
       desc "Upload DEB packages for Ubuntu #{dist}"
       task "upload:#{dist}" => :check do
         Dir["*.{changes,deb,dsc,tar.gz}"].each do |file|
@@ -123,7 +123,7 @@ namespace :master do
       repo = PREFIX.join("ubuntu")
       unless repo.join(".checkpoint").exist?
         mkdir_p(repo.join("conf"))
-        ubuntu_dists = {"lucid" => "10.04", "trusty" => "14.04", "precise" => "12.04"}
+        ubuntu_dists = {"lucid" => "10.04", "trusty" => "14.04", "precise" => "12.04", "wheezy" => "deb7"}
         File.open(repo.join("conf", "distributions"), "w+") do |f|
           ubuntu_dists.each do |name, ver|
             mkdir_p(repo.join("pool"))
