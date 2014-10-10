@@ -9,7 +9,7 @@ GetOptions(
     'i|install=s' => \(my $PACKAGES = ""),
     'U|update-only' => \(my $UPDATE_ONLY = 0),
     'R|root=s' => \(my $INST_ROOT = "/var/cache/pbuilder"),
-    'D|dists=s' => \(my $DIST_LIST = "lucid,precise,trusty"),
+    'D|dists=s' => \(my $DIST_LIST = "lucid,precise,trusty,wheezy"),
     'h|help' => \(my $WANT_HELP = 0));
 
 if ($WANT_HELP) {
@@ -58,18 +58,25 @@ sub install_packages {
 
 sub setup_image {
     my ($dist,$arch) = @_;
+    my $keyring = "/usr/share/keyrings/ubuntu-archive-keyring.gpg";
+    my $mirror = $MIRROR;
+    if ($dist =~ m/wheezy/) {
+        #debian
+        $keyring =~ s/ubuntu/debian/g;
+        $mirror =~ s/ubuntu/debian/g;
+    }
     my @cmd = (
         "sudo", "cowbuilder",
         "--create",
         "--distribution", $dist,
         "--components", "main universe",
         "--basepath", gen_basepath($dist, $arch),
-        "--mirror", $MIRROR,
+        "--mirror", $mirror,
 
         "--debootstrapopts",
         "--arch=$arch",
         "--debootstrapopts",
-        "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg");
+        "--keyring=$keyring");
 
     run_command(@cmd);
     install_packages($dist, $arch, join(",",
