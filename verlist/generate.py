@@ -15,7 +15,8 @@ VERSIONS = [
         VersionInfo('lcb_232', '2.3.2'),
         VersionInfo('lcb_240', '2.4.0'),
         VersionInfo('lcb_241', '2.4.1'),
-        VersionInfo('lcb_242', '2.4.2')
+        VersionInfo('lcb_242', '2.4.2'),
+        VersionInfo('lcb_243', '2.4.3')
 ]
 
 VERSIONS = list(reversed(VERSIONS))
@@ -31,17 +32,26 @@ class UbuntuTarget(object):
         self.version = version
         self.display_version = display_version
 
+    def format_url(self, lcbvers, arch):
+        return "libcouchbase-{0}_ubuntu{1}_{2}.tar".format(
+                lcbvers, self.version, arch)
+
     def get_filename(self, lcbvers, arch):
         if mk_hexvers(lcbvers) < 0x020302 and self.version == '1404':
             return "N/A";
+        if mk_hexvers(lcbvers) < 0x020403 and self.version == 'wheezy':
+            return "N/A"
 
         if arch == 'x86':
             arch = 'i386'
         else:
             arch = 'amd64'
 
-        return "libcouchbase-{0}_ubuntu{1}_{2}.tar".format(
-                lcbvers, self.version, arch)
+        return self.format_url(lcbvers, arch)
+
+class DebianTarget(UbuntuTarget):
+    def format_url(self, lcbvers, arch):
+        return "libcouchbase-{0}_{1}_{2}.tar".format(lcbvers, self.version, arch)
 
 class WindowsTarget(object):
     def __init__(self, version, display_version):
@@ -86,6 +96,7 @@ TARGETS = (
         UbuntuTarget('1004', 'Ubuntu 10.04'),
         UbuntuTarget('1204', 'Ubuntu 12.04'),
         UbuntuTarget('1404', 'Ubuntu 14.04'),
+        DebianTarget('wheezy', 'Debian Wheezy'),
         RedhatTarget('centos55', 'Enterprise Linux 5'),
         RedhatTarget('centos62', 'Enterprise Linux 6'),
         RedhatTarget('centos7', 'Enterprise Linux 7'),
