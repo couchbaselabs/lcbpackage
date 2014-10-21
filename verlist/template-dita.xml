@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<!-- vim: set sw=2 ts=2: -->
+<concept id="downloads-dummy-concept">
+  <title></title>
+  <shortdesc></shortdesc>
+  <conbody>
+    <section id="c-downloads-list">
+      {% for version in versions %}
+      <table frame="all" rowsep="1" colsep="1">
+        <title>C SDK Downloads - Version {{version.display}}</title>
+        <tgroup cols="3">
+          <colspec colname="c1" colnum="1"/>
+          <colspec colname="c2" colnum="2"/>
+          <colspec colname="c3" colnum="3"/>
+          <thead>
+            <row>
+              <entry>Platform</entry>
+              <entry>Architecture</entry>
+              <entry>File</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Source Archive</entry>
+              <entry>Any</entry>
+              {% set filename=tarball.get_filename(version.display, None) %}
+              <entry><xref scope="external" format="html" href="http://packages.couchbase.com/clients/c/{{filename}}">{{filename}}</xref></entry>
+            </row>
+            {% for target in targets %}
+            {% for arch in ('x86', 'x64') %}
+            {% set filename=target.get_filename(version.display, arch) %}
+            {% if filename != 'N/A' %}
+            <row>
+              <entry>{{target.display_version}}</entry>
+              <entry>{{arch}}</entry>
+              <entry><xref scope="external" format="html" href="http://packages.couchbase.com/clients/c/{{filename}}">{{filename}}</xref></entry>
+            </row>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+          </tbody>
+        </tgroup>
+      </table>
+      {% endfor %}
+    </section>
+  </conbody>
+</concept>

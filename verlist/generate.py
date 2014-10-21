@@ -1,23 +1,42 @@
-from jinja2 import Template
-buf = open("template.html", "r").read()
+#!/usr/bin/env python
 
-from collections import namedtuple
-VersionInfo = namedtuple('VersionInfo', 'verstr display')
+from jinja2 import Template
+from argparse import ArgumentParser
+
+ap = ArgumentParser()
+ap.add_argument('-f', '--format', default='html', choices=('html', 'dita'))
+ap.add_argument('-F', '--final-only', default=False, action='store_true',
+        help="Only show the final version for each minor release")
+
+options = ap.parse_args()
+fname = 'template.html' if options.format == 'html' else 'template-dita.xml'
+buf = open(fname, "r").read()
+
+class VersionInfo(object):
+    def __init__(self, verstr, name, is_final=False, is_current=False):
+        self.verstr = verstr
+        self.display = name
+        self.is_final = is_final
+        self.is_current = is_current
+
 VERSIONS = [
-        VersionInfo('lcb_207', '2.0.7'),
+        VersionInfo('lcb_207', '2.0.7', is_final=True),
         VersionInfo('lcb_210', '2.1.0'),
         VersionInfo('lcb_211', '2.1.1'),
         VersionInfo('lcb_212', '2.1.2'),
-        VersionInfo('lcb_213', '2.1.3'),
-        VersionInfo('lcb_220', '2.2.0'),
+        VersionInfo('lcb_213', '2.1.3', is_final=True),
+        VersionInfo('lcb_220', '2.2.0', is_final=True),
         VersionInfo('lcb_230', '2.3.0'),
         VersionInfo('lcb_231', '2.3.1'),
-        VersionInfo('lcb_232', '2.3.2'),
+        VersionInfo('lcb_232', '2.3.2', is_final=True),
         VersionInfo('lcb_240', '2.4.0'),
         VersionInfo('lcb_241', '2.4.1'),
         VersionInfo('lcb_242', '2.4.2'),
-        VersionInfo('lcb_243', '2.4.3')
+        VersionInfo('lcb_243', '2.4.3', is_final=True, is_current=True)
 ]
+
+if options.final_only:
+    VERSIONS = [ x for x in VERSIONS if x.is_final ]
 
 VERSIONS = list(reversed(VERSIONS))
 
@@ -105,5 +124,5 @@ TARGETS = (
         WindowsTarget('vc11', 'Visual Studio 2012'),
     )
 
-tmpl = Template(buf)
+tmpl = Template(buf, trim_blocks=True, lstrip_blocks=True)
 print tmpl.render(versions=VERSIONS, targets=TARGETS, tarball=SourceTarget())
