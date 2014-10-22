@@ -8,8 +8,9 @@ GetOptions(
     'm|mirror=s' => \(my $MIRROR = "http://localhost:9999/ubuntu"),
     'i|install=s' => \(my $PACKAGES = ""),
     'U|update-only' => \(my $UPDATE_ONLY = 0),
-    'R|root=s' => \(my $INST_ROOT = "/var/cache/pbuilder"),
+    'R|root=s' => \(my $INST_ROOT = $ENV{PBROOT} || "/var/cache/pbuilder"),
     'D|dists=s' => \(my $DIST_LIST = "lucid,precise,trusty,wheezy"),
+    'A|arches=s' => \(my $ARCHES = 'i386,amd64'),
     'h|help' => \(my $WANT_HELP = 0));
 
 if ($WANT_HELP) {
@@ -21,6 +22,8 @@ Usage: setup-cowbuilders.pl <OPTIONS>
  -i --install       Packages to install
  -U --update-only   Don't rebuild the image. Only install packages
  -h --help          This message
+ -D --dists         Comma separated list of distributions
+ -A --arches        Comma separated list of architectures
 EOF
     exit(0);
 }
@@ -60,16 +63,18 @@ sub setup_image {
     my ($dist,$arch) = @_;
     my $keyring = "/usr/share/keyrings/ubuntu-archive-keyring.gpg";
     my $mirror = $MIRROR;
+    my $distlist = "main universe";
     if ($dist =~ m/wheezy/) {
         #debian
         $keyring =~ s/ubuntu/debian/g;
         $mirror =~ s/ubuntu/debian/g;
+        $distlist = "main";
     }
     my @cmd = (
         "sudo", "cowbuilder",
         "--create",
         "--distribution", $dist,
-        "--components", "main universe",
+        "--components", $distlist,
         "--basepath", gen_basepath($dist, $arch),
         "--mirror", $mirror,
 
@@ -80,17 +85,14 @@ sub setup_image {
 
     run_command(@cmd);
     install_packages($dist, $arch, join(",",
-            ("libevent-dev", "libev-dev", "autotools-dev", "unzip", "curl", "wget", $PACKAGES)));
+            ("libevent-dev", "libev-dev", "libssl-dev", "autotools-dev", "unzip", "curl", "wget", $PACKAGES)));
 }
 
-my @ARCHES=(
-    'i386',
-    'amd64'
-);
-my @DISTS = split(',', $DIST_LIST);
+my @arches = split(',', $ARCHES);
+my @dists = split(',', $DIST_LIST);
 
-foreach my $dist (@DISTS) {
-    foreach my $arch (@ARCHES) {
+foreach my $dist (@dists) {
+    foreach my $arch (@arches) {
         if ($UPDATE_ONLY) {
             install_packages($dist, $arch, $PACKAGES);
         } else {
