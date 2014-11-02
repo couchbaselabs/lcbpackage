@@ -6,6 +6,7 @@
   <shortdesc></shortdesc>
   <conbody>
     <section id="c-downloads-list">
+      <title>All Downloads</title>
       {% for version in versions %}
       <table frame="all" rowsep="1" colsep="1">
         <title>C SDK Downloads - Version {{version.display}}</title>
