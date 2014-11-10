@@ -30,6 +30,7 @@ do
         CUR_RESDIR=$RESDIR/el$RELNO
         /usr/bin/mock \
             -r lcb-el$RELNO-$ARCH \
+            --define "__lcb_is_cmake 1" \
             --rebuild \
             --resultdir="$CUR_RESDIR" $@
     done

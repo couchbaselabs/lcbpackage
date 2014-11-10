@@ -14,21 +14,13 @@ fi
 
 . $SCRIPTPATH/../common/vars.sh
 
-make dist
+SRCDIR=$PWD
 VERSION=$($PARSE_SCRIPT --tar)
 DEB_VERSION=$($PARSE_SCRIPT --deb)
-WORKSPACE=$PWD/build
-PKGDIR=$WORKSPACE/libcouchbase-$VERSION
 
-mkdir -p $PKGDIR
-cp -r packaging/deb $PKGDIR/debian
-cp libcouchbase-$VERSION.tar.gz $WORKSPACE/libcouchbase_$DEB_VERSION.orig.tar.gz
-
-# Extract the package
-(
-    cd $WORKSPACE;
-    tar zxf libcouchbase_$DEB_VERSION.orig.tar.gz
-)
+TARNAME_BASE=libcouchbase-$VERSION
+DEBSRC_NAME=libcouchbase_$DEB_VERSION.orig.tar.gz
+WORKSPACE=$SRCDIR/LCBPACKAGE-DEB
 
 # Sign the source package
 if [ -z "${NO_GPG}" ]
@@ -37,20 +29,29 @@ then
     SRC_GPG_OPTS="-k $DPKG_GPG_KEY"
 fi
 
-# Generate the debianized source
-(
-    cd $PKGDIR;
-    dch \
-        --no-auto-nmu \
-        --newversion "$DEB_VERSION" \
-        "Release package for libcouchbase $DEB_VERSION"
-    
-    dpkg-buildpackage -rfakeroot -d -S -sa -k$DPKG_GPG_KEY
+# Configure the sources
+rm      -rf $WORKSPACE
+mkdir   -p  $WORKSPACE
+cd          $WORKSPACE
+
+cmake       $SRCDIR
+make dist
+
+EXTRACTED=$WORKSPACE/$TARNAME_BASE
+
+# Rename the tarball to its debianized version
+ln -s $WORKSPACE/$TARNAME_BASE.tar.gz $WORKSPACE/$DEBSRC_NAME
+tar -xf $TARNAME_BASE.tar.gz
+cp -a $SRCDIR/packaging/deb $EXTRACTED/debian
+
+( \
+    cd $EXTRACTED && \
+    dch --no-auto-nmu --newversion "$DEB_VERSION" "Release package for libcouchbase $DEB_VERSION" && \
+    dpkg-buildpackage -rfakeroot -d -S -sa -k$DPKG_GPG_KEY \
 )
 
 
-mv $WORKSPACE/*.{dsc,tar.gz} $PWD
-rm -rf $WORKSPACE
+# mv $WORKSPACE/*.{dsc,tar.gz} $PWD
 if [ -z "$PBROOT" ]; then
     PBROOT=/var/cache/pbuilder
 fi
@@ -73,7 +74,7 @@ for DIST in $DISTS; do
             --basepath $PBROOT/$DIST-$ARCH.cow \
             --buildresult $RESDIR \
             --debbuildopts -j20 \
-            --debbuildopts "-us -uc" \
+            --debbuildopts "-us -uc -R'make -f debian/rules LCB_BUILDING_WITH_CMAKE=1'" \
             libcouchbase_$DEB_VERSION.dsc
         if [ -z "$NO_GPG" ]
         then debsign -k $DPKG_GPG_KEY --no-re-sign \
