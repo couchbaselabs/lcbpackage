@@ -14,11 +14,11 @@ export DPKG_GPG_KEY=79CF7903
 export DEB_ARCHES="amd64 i386"
 export QUICK_DEB_ARCHES="amd64"
 
-export DEB_DISTROS="lucid precise trusty wheezy"
-export QUICK_DEB_DISTROS=lucid
+export DEB_DISTROS="precise trusty wheezy"
+export QUICK_DEB_DISTROS=wheezy
 
 export RPM_ARCHES="x86_64 i386"
-export RPM_RELNOS="5 6 7"
+export RPM_RELNOS="6 7"
 export QUICK_RPM_ARCHES=x86_64
 export QUICK_RPM_RELNOS=6
 
