@@ -46,7 +46,12 @@ cp -a $SRCDIR/packaging/deb $EXTRACTED/debian
 
 ( \
     cd $EXTRACTED && \
-    dch --no-auto-nmu --newversion "$DEB_VERSION" "Release package for libcouchbase $DEB_VERSION" && \
+    dch --no-auto-nmu \
+    --package libcouchbase \
+    --newversion "$DEB_VERSION" \
+    --create \
+    "Release package for libcouchbase $DEB_VERSION" \
+    && \
     dpkg-buildpackage -rfakeroot -d -S -sa -k$DPKG_GPG_KEY \
 )
 
