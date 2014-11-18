@@ -7,8 +7,38 @@ popd > /dev/null
 
 . $SCRIPTPATH/../common/vars.sh
 
-RESDIR=$PWD/DIST
+PARSE_SCRIPT=$SCRIPTPATH/../git-describe-parse/parse-git-describe.pl
+TARNAME=libcouchbase-$( $PARSE_SCRIPT --tar)
+VERSION=$( $PARSE_SCRIPT --rpm-ver)
+RELEASE=$( $PARSE_SCRIPT --rpm-rel)
+
+# Create the Build directory
+WORKSPACE=$PWD/LCBPACKAGE-RPM
+SRCDIR=$PWD
+
+rm -rf $WORKSPACE
+mkdir $WORKSPACE
+cd $WORKSPACE
+
+../cmake/configure --disable-plugins --disable-tests --with-cmake=cmake28
+make dist # Generates the tarball
+
+sed \
+    "s/@VERSION@/${VERSION}/g;s/@RELEASE@/${RELEASE}/g;s/@TARREDAS@/${TARNAME}/g" \
+    < $SRCDIR/packaging/rpm/libcouchbase.spec.in > libcouchbase.spec
+
+rpmbuild -bs --nodeps \
+		 --define "_source_filedigest_algorithm md5" \
+		 --define "_binary_filedigest_algorithm md5" \
+		 --define "_topdir ${PWD}" \
+		 --define "_sourcedir ${PWD}" \
+		 --define "_srcrpmdir ${PWD}" libcouchbase.spec
+
+SRCRPM=libcouchbase-${VERSION}-${RELEASE}*.src.rpm
+RESDIR=$WORKSPACE/DIST
 mkdir -p $RESDIR
+
+
 
 for RELNO in $RPM_RELNOS
 do
@@ -32,6 +62,6 @@ do
             -r lcb-el$RELNO-$ARCH \
             --define "__lcb_is_cmake 1" \
             --rebuild \
-            --resultdir="$CUR_RESDIR" $@
+            --resultdir="$CUR_RESDIR" $SRCRPM $@
     done
 done
