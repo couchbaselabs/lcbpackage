@@ -11,7 +11,7 @@ GetOptions(
     'i|install=s' => \(my $PACKAGES = join(',', @DEFAULT_PACKAGES)),
     'U|update-only' => \(my $UPDATE_ONLY = 0),
     'R|root=s' => \(my $INST_ROOT = $ENV{PBROOT} || "/var/cache/pbuilder"),
-    'D|dists=s' => \(my $DIST_LIST = "lucid,precise,trusty,wheezy"),
+    'D|dists=s' => \(my $DIST_LIST = "precise,trusty,wheezy"),
     'A|arches=s' => \(my $ARCHES = 'i386,amd64'),
     'h|help' => \(my $WANT_HELP = 0),
     'x|execute=s' => \(my $EXECSTR = ''));
