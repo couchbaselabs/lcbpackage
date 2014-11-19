@@ -34,7 +34,7 @@ rm      -rf $WORKSPACE
 mkdir   -p  $WORKSPACE
 cd          $WORKSPACE
 
-cmake       $SRCDIR --disable-plugins --disable-tests
+../cmake/configure --disable-plugins --disable-tests
 make dist
 
 EXTRACTED=$WORKSPACE/$TARNAME_BASE
