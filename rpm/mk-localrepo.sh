@@ -17,7 +17,7 @@ rm -rf $LCB_REPO_PREFIX/rpm
 rake -f $RAKEFILE master:rpm:seed
 
 for DIST in $RPM_RELNOS; do
-    cd $TOPDIR/DIST/el$DIST
+    cd $TOPDIR/LCBPACKAGE-RPM/DIST/el$DIST
     if [ $DIST = "5" ]; then
         rakedist="5.5"
     elif [ $DIST = "6" ]; then

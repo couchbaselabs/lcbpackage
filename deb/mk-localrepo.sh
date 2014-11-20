@@ -17,7 +17,7 @@ rm -rf $LCB_REPO_PREFIX/ubuntu
 rake -f $RAKEFILE master:deb:seed
 
 for DIST in $DEB_DISTROS; do
-    cd $TOPDIR/DIST/$DIST
+    cd $TOPDIR/LCBPACKAGE-DEB/DIST/$DIST
     rake -f $RAKEFILE builder:deb:upload:$DIST
 done
 
