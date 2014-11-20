@@ -20,23 +20,18 @@ if (!$VERSION) {
 # Architectures
 my @ARCHES = (qw(x86 x64));
 my %RPMSPECS = (
-    '55' => {
-        suffix => 'rpm',
-        dist => 'centos55',
-        search_path => "$RPMDIR/5.5",
-        arch_pkg => sub {
-            my $name = shift;
-            return $name eq 'x86' ? 'i386' : 'x86_64';
-        },
-    },
-
     '62' => {
+        suffix => 'rpm',
         dist => 'centos62',
         search_path => "$RPMDIR/6.2",
         arch_tar => sub {
             my $name = shift;
             return $name eq 'x86' ? 'i686' : 'x86_64';
-        }
+        },
+        arch_pkg => sub {
+            my $name = shift;
+            return $name eq 'x86' ? 'i386' : 'x86_64';
+        },
     },
     '7' => {
         suffix => 'rpm',
@@ -47,19 +42,12 @@ my %RPMSPECS = (
     }
 );
 
-$RPMSPECS{62}->{arch_pkg} = $RPMSPECS{55}->{arch_pkg};
-$RPMSPECS{55}->{arch_tar} = $RPMSPECS{55}->{arch_pkg};
-$RPMSPECS{62}->{suffix} = 'rpm';
-
 sub convert_deb_arch {
     my $name = shift;
     return $name eq 'x86' ? 'i386' : 'amd64';
 }
 
 my %DEBSPECS = (
-    lucid => {
-        dist => 'ubuntu1004',
-    },
     trusty => {
         dist => 'ubuntu1404',
     },
