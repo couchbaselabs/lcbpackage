@@ -54,18 +54,35 @@ apt-get install \
 	rake \
 	reprepro \
 	createrepo \
-	s3cmd
+	s3cmd \
+	cmake
 ```
+
+I
+
+### Note for Ubuntu Precise
+
+It is highly recommended you use a newer Ubuntu/Debian release (Wheezy or Trusty).
+Precise is also supported, however the CMake version must be upgraded to be
+2.8.9 at least. You may obtain this version by adding my PPA here:
+https://launchpad.net/~mnunberg/+archive/ubuntu/cmake
+
 
 For testing the repository layout itself you will also need a 
 webserver.
 
-### Download ubuntu archive keyring
+### Download achive keyrings
+
+If installing Ubuntu systems a Debian master, you will need the Ubuntu keyring,
+which can be obtained using the following command.
 
 ```
 wget http://archive.ubuntu.com/ubuntu/project/ubuntu-archive-keyring.gpg
 cp ubuntu-archive-keyring.gpg /usr/share/keyrings/
 ```
+
+Conversely, if you are building a debian host on an Ubuntu master, install the
+`debian-keyring` and `debian-archive-keyring` packages.
 
 ### Edit _Approx_
 
@@ -92,6 +109,25 @@ install things on your own.
 If you wish to make testing this configuration a bit quicker, comment out
 all but a single element of each of the `@ARCHES` and `@DISTS` arrays
 towards the end of the file.
+
+### Common Issues
+
+You might run into some issues when generating the packages:
+
+#### Cannot verify keyring
+
+This is because your packages are signed with a GPG key which is not imported
+into your keyring. If you have properly installed all the keyring as mentioned
+above, it may be because of a stale package configuration (or a stale approx proxy).
+In this case, run `apt get update` _and_ delete your `approx` cache files, usually
+found in `/var/cache/approx`.
+
+#### `file exists`
+You will get this error if you try to re-configure a builder that already exits,
+using the `setup-cowbuilders.pl` script. If the host is indeed already configured
+(and you just want to verify/update the installation), ensure you pass the `-U`
+option to `setup-cowbuilders.pl`. If the host is partially configured, ensure you
+delete the directory (e.g. `/var/lib/pbuilder/i386-wheezy.cow`) and retry.
 
 ## Generating Packages
 
@@ -121,22 +157,13 @@ lcbpackage/
 ```
 
 
-You will need a recent autotools to generate the initial tarball:
-
-```
-$ ./config/autorun.sh
-$ ./configure --disable-plugins --disable-tests --disable-couchbasemock
-```
-
-Once this is done you can actually start invoking the builders:
-
 ```
 $ ../lcbpackage/deb/build-deb-cowbuilders.sh
 ```
 
 This will take quite some time to run as well.
 
-The generated packages are located in the `DIST` directory which is
+The generated packages are located in the `LCBPACKAGE-DEB/DIST` directory which is
 created in the current (i.e. top-level) directory. The provided repositories
 will have been signed.
 
