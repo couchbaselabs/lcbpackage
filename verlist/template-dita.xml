@@ -6,7 +6,8 @@
   <shortdesc></shortdesc>
   <conbody>
     <section id="c-downloads-list">
-      <title>All Downloads</title>
+      <title>Downloads</title>
+      <p>The following tables contain download links for all versions of the C 2.x SDK.</p>
       {% for version in versions %}
       <table frame="all" rowsep="1" colsep="1">
         <title>C SDK Downloads - Version {{version.display}}</title>

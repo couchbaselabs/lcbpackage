@@ -32,7 +32,8 @@ VERSIONS = [
         VersionInfo('lcb_240', '2.4.0'),
         VersionInfo('lcb_241', '2.4.1'),
         VersionInfo('lcb_242', '2.4.2'),
-        VersionInfo('lcb_243', '2.4.3', is_final=True, is_current=True)
+        VersionInfo('lcb_243', '2.4.3'),
+        VersionInfo('lcb_244', '2.4.4', is_final=True, is_current=True)
 ]
 
 if options.final_only:
@@ -56,9 +57,12 @@ class UbuntuTarget(object):
                 lcbvers, self.version, arch)
 
     def get_filename(self, lcbvers, arch):
-        if mk_hexvers(lcbvers) < 0x020302 and self.version == '1404':
+        hv = mk_hexvers(lcbvers)
+        if hv < 0x020302 and self.version == '1404':
             return "N/A";
-        if mk_hexvers(lcbvers) < 0x020403 and self.version == 'wheezy':
+        if hv < 0x020403 and self.version == 'wheezy':
+            return "N/A"
+        if hv >= 0x020404 and self.version == '1004':
             return "N/A"
 
         if arch == 'x86':
@@ -88,8 +92,11 @@ class RedhatTarget(object):
         self.display_version = display_version
 
     def get_filename(self, lcbvers, arch):
-        if self.version.startswith('centos7') and mk_hexvers(lcbvers) < 0x020400:
+        hv = mk_hexvers(lcbvers)
+        if self.version.startswith('centos7') and hv < 0x020400:
             return "N/A"
+        if self.version.startswith('centos5') and hv >= 0x020404:
+            return 'N/A'
 
         if arch == 'x86':
             if self.version.startswith('centos7'):
