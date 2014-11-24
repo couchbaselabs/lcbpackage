@@ -350,36 +350,28 @@ The process of building packages consists of:
 1. Generating a `.spec` and `.src.rpm` file
 2. Telling `mock` about those files and building them
 
+These are handled in a single script via the `rpm/build-rpms.sh`
+
 The following commands should be executed from the `libcouchbase`
 repository. We assume the `lcbpackage` repository is a sibling of
 the `libcouchbase` repository.
 
-**Ensure any existing `.spec` and `.rpm` files are removed
-from the working directory**
-
 ```
-rm -f *.{spec,rpm}
+../lcbpackage/rpm/build-rpms.sh
 ```
 
+You may optionally pass the `--verbose` option to the script, which will show you what is
+going on.
 
-```
-./config/autorun.sh
-./configure --disable-plugins --disable-couchbasemock
-make dist
-../lcbpackage/rpm/genspec.sh
-```
+Unfortunately, it seems that Yum likes to take its sweet time downloading packages,
+however it does not display the traditional progress bar. This is likely due to how
+mock captures the builder output. In any event, do not be alarmed if your build
+seems to "hang". Inspect network and disk utilization if you suspect something else
+may be amiss.
 
-Assuming you've actually removed the `.spec` and `.rpms` from previous
-runs (if any), you can just run
-
-```
-../lcbpackage/rpm/build-rpms.sh *.rpm
-```
-
-This will run for some time and will output the resulting RPMs inside
-the `DIST` directory.
-
-To sign and create a repository:
+The output packages will be in the `LCBPACKAGE-RPM` directory. This directory is
+created anew each time the build script is run (so make sure you save any contents
+of that directory if you need to rebuild)
 
 ## Generating a Repository
 
