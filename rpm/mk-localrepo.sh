@@ -6,31 +6,40 @@ SCRIPTPATH=`pwd`
 popd > /dev/null
 
 # Run from repository directory
-
-RAKEFILE=$SCRIPTPATH/../rakefiles/repositories.rake
 COMMON=$SCRIPTPATH/../common
 TOPDIR=$PWD
-
 . $COMMON/vars.sh
 
-rm -rf $LCB_REPO_PREFIX/rpm
-rake -f $RAKEFILE master:rpm:seed
 
-for DIST in $RPM_RELNOS; do
-    cd $TOPDIR/LCBPACKAGE-RPM/DIST/el$DIST
-    if [ $DIST = "5" ]; then
-        rakedist="5.5"
-    elif [ $DIST = "6" ]; then
-        rakedist="6.2"
-    else
-        rakedist="7"
-    fi
-    for pkg in *.rpm
-    do
+RPM_REPO=$LCB_REPO_PREFIX/rpm
+rm -rf $RPM_REPO
+
+do_distarch() {
+    dist=$1;
+    arch=$2;
+    dist_subdir=
+    if [ $dist = '6' ]; then dist_subdir='6.2'; else dist_subdir=$dist; fi
+    # Copy the relevant files into the directory
+    destdir=$RPM_REPO/$dist_subdir/$arch
+    srcdir=$TOPDIR/LCBPACKAGE-RPM/DIST/el$dist
+    mkdir -p $destdir
+    cp $srcdir/*.src.rpm $destdir
+    cp $srcdir/*.$arch.rpm $destdir
+
+    for pkg in $destdir/*.rpm; do
         expect $SCRIPTPATH/sign_rpm.expect $RPM_GPG_KEY $pkg
     done
-    rake -f $RAKEFILE builder:rpm:upload:centos$rakedist
-done
 
-rake -f $RAKEFILE master:rpm:import
-rake -f $RAKEFILE master:rpm:sign
+    # Generate the metadata structures
+    createrepo --checksum sha $destdir
+    gpg --batch --yes -u $RPM_GPG_KEY --detach-sign --armor $destdir/repodata/repomd.xml
+}
+
+for DIST in $RPM_RELNOS; do
+    for ARCH in $RPM_ARCHES; do
+        if [ $ARCH = 'i386' ] && [ $DIST = '7' ]; then
+            continue;
+        fi
+        do_distarch $DIST $ARCH
+    done
+done

@@ -50,11 +50,8 @@ apt-get install \
 	debhelper \
 	cowbuilder \
 	approx \
-	ruby \
-	rake \
 	reprepro \
 	createrepo \
-	s3cmd \
 	cmake
 ```
 
@@ -335,12 +332,6 @@ the base chroots for each environment. This may take some time
 
 ```
 ./rpm/init-mocks.sh --init
-```
-
-### Other Tools
-
-```
-yum -y install rubygem-rake expect
 ```
 
 ## Building Packages
