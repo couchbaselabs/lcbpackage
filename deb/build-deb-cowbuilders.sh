@@ -80,7 +80,7 @@ for DIST in $DISTS; do
             --basepath $PBROOT/$DIST-$ARCH.cow \
             --buildresult $RESDIR \
             --debbuildopts -j20 \
-            --debbuildopts "-us -uc -R'make -f debian/rules LCB_BUILDING_WITH_CMAKE=1'" \
+            --debbuildopts "-us -uc" \
             libcouchbase_$DEB_VERSION.dsc
         if [ -z "$NO_GPG" ]
         then debsign -k $DPKG_GPG_KEY --no-re-sign \
