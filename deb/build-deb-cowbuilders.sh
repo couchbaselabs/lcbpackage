@@ -16,10 +16,11 @@ fi
 
 SRCDIR=$PWD
 VERSION=$($PARSE_SCRIPT --tar)
-DEB_VERSION=$($PARSE_SCRIPT --deb)
+DEB_VERBASE=$($PARSE_SCRIPT --deb)
+DEB_VERSION=${DEB_VERBASE}-1
 
 TARNAME_BASE=libcouchbase-$VERSION
-DEBSRC_NAME=libcouchbase_$DEB_VERSION.orig.tar.gz
+DEBSRC_NAME=libcouchbase_$DEB_VERBASE.orig.tar.gz
 WORKSPACE=$SRCDIR/LCBPACKAGE-DEB
 
 # Sign the source package
