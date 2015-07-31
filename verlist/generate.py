@@ -33,7 +33,14 @@ VERSIONS = [
         VersionInfo('lcb_241', '2.4.1'),
         VersionInfo('lcb_242', '2.4.2'),
         VersionInfo('lcb_243', '2.4.3'),
-        VersionInfo('lcb_244', '2.4.4', is_final=True, is_current=True)
+        VersionInfo('lcb_244', '2.4.4'),
+        VersionInfo('lcb_245', '2.4.5'),
+        VersionInfo('lcb_246', '2.4.6'),
+        VersionInfo('lcb_247', '2.4.7'),
+        VersionInfo('lcb_248', '2.4.8'),
+        VersionInfo('lcb_249', '2.4.9', is_final=True),
+        VersionInfo('lcb_250', '2.5.0'),
+        VersionInfo('lcb_251', '2.5.1', is_final=True, is_current=True)
 ]
 
 if options.final_only:
