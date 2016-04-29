@@ -14,7 +14,7 @@ export DPKG_GPG_KEY=79CF7903
 export DEB_ARCHES="amd64 i386"
 export QUICK_DEB_ARCHES="amd64"
 
-export DEB_DISTROS="precise trusty wheezy"
+export DEB_DISTROS="precise trusty wheezy xenial jessie"
 export QUICK_DEB_DISTROS=wheezy
 
 export RPM_ARCHES="x86_64 i386"

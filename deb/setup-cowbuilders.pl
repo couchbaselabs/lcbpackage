@@ -11,7 +11,7 @@ GetOptions(
     'i|install=s' => \(my $PACKAGES = join(',', @DEFAULT_PACKAGES)),
     'U|update-only' => \(my $UPDATE_ONLY = 0),
     'R|root=s' => \(my $INST_ROOT = $ENV{PBROOT} || "/var/cache/pbuilder"),
-    'D|dists=s' => \(my $DIST_LIST = "precise,trusty,wheezy"),
+    'D|dists=s' => \(my $DIST_LIST = "precise,trusty,wheezy,xenial,jessie"),
     'A|arches=s' => \(my $ARCHES = 'i386,amd64'),
     'h|help' => \(my $WANT_HELP = 0),
     'x|execute=s' => \(my $EXECSTR = ''));
@@ -63,7 +63,7 @@ sub install_packages {
         print $fh $EXECSTR . "\n";
     } else {
         # Needed for CMake PPA repository
-        if ($dist ne 'wheezy' && $dist ne 'trusty') {
+        if ($dist eq 'precise') {
             print $fh 'FNAMES=$(ls /etc/apt/sources.list.d | grep cmake) || true'."\n";
             print $fh 'if [ -z "$FNAMES" ]; then'."\n";
             print $fh "echo deb $CM_PPA $dist main > /etc/apt/sources.list.d/mnunberg-cmake-$dist.list\n";
@@ -93,7 +93,7 @@ sub setup_image {
     my $keyring = "/usr/share/keyrings/ubuntu-archive-keyring.gpg";
     my $mirror = $MIRROR;
     my $distlist = "main universe";
-    if ($dist =~ m/wheezy/) {
+    if ($dist =~ m/wheezy|jessie/) {
         #debian
         $keyring =~ s/ubuntu/debian/g;
         $mirror =~ s/ubuntu/debian/g;

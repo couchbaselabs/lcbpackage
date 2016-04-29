@@ -18,6 +18,8 @@ get_version() {
     if [ $name = 'precise' ]; then VERNUM='12.04';
     elif [ $name = 'trusty' ]; then VERNUM='14.04';
     elif [ $name = 'wheezy' ]; then VERNUM='deb7';
+    elif [ $name = 'xenial' ]; then VERNUM='16.04';
+    elif [ $name = 'jessie' ]; then VERNUM='deb8';
     else
         echo "Unknown distribution name $name"
         exit 1
