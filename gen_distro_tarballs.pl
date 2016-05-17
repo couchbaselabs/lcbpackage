@@ -56,6 +56,12 @@ my %DEBSPECS = (
     },
     wheezy => {
         dist => 'wheezy'
+    },
+    'jessie' => {
+        dist => 'jessie'
+    },
+    'xenial' => {
+        dist => 'ubuntu1604'
     }
 );
 
