@@ -45,7 +45,10 @@ VERSIONS = [
         VersionInfo('lcb_253', '2.5.3'),
         VersionInfo('lcb_254', '2.5.4'),
         VersionInfo('lcb_255', '2.5.5'),
-        VersionInfo('lcb_256', '2.5.6', is_final=True, is_current=True)
+        VersionInfo('lcb_256', '2.5.6'),
+        VersionInfo('lcb_257', '2.5.7'),
+        VersionInfo('lcb_258', '2.5.8', is_final=True),
+        VersionInfo('lcb_260', '2.6.0', is_final=True, is_current=True)
 ]
 
 if options.final_only:
@@ -75,6 +78,8 @@ class UbuntuTarget(object):
         if hv < 0x020403 and self.version == 'wheezy':
             return "N/A"
         if hv >= 0x020404 and self.version == '1004':
+            return "N/A"
+        if hv < 0x020006 and self.version in ('1604', 'jessie'):
             return "N/A"
 
         if arch == 'x86':
@@ -134,7 +139,9 @@ TARGETS = (
         UbuntuTarget('1004', 'Ubuntu 10.04'),
         UbuntuTarget('1204', 'Ubuntu 12.04'),
         UbuntuTarget('1404', 'Ubuntu 14.04'),
+        UbuntuTarget('1604', 'Ubuntu 16.04'),
         DebianTarget('wheezy', 'Debian Wheezy'),
+        DebianTarget('jessie', 'Debian Jessie'),
         RedhatTarget('centos55', 'Enterprise Linux 5'),
         RedhatTarget('centos62', 'Enterprise Linux 6'),
         RedhatTarget('centos7', 'Enterprise Linux 7'),
