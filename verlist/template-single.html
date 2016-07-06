@@ -1,0 +1,30 @@
+<!-- vim: set sw=2 ts=2: -->
+<!DOCTYPE HTML>
+{% for version in versions %}
+<table>
+  <tr>
+    <th>Platform</th>
+    <th>Arhictecutre</th>
+    <th>File</th>
+  </tr>
+  <tr>
+    <td>Source Archive</td>
+    <td style="text-align: center">Any</td>
+    {% set filename=tarball.get_filename(version.display, None) %}
+    <td><a class="fname" href="http://packages.couchbase.com/clients/c/{{filename}}">{{filename}}</a></td>
+  </tr>
+  {% for target in targets %}
+  {% for arch in ('x86', 'x64') %}
+  {% set filename=target.get_filename(version.display, arch) %}
+  {% if filename != 'N/A' %}
+  <tr>
+    <td>{{target.display_version}}</td>
+    <td style="text-align: center">{{arch}}</td>
+    <td><a class="fname" href="http://packages.couchbase.com/clients/c/{{filename}}">{{filename}}</a></td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+  {% endfor %}
+</table>
+{% endfor %}
+
