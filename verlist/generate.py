@@ -7,9 +7,12 @@ ap = ArgumentParser()
 ap.add_argument('-f', '--format', default='html', choices=('html', 'dita'))
 ap.add_argument('-F', '--final-only', default=False, action='store_true',
         help="Only show the final version for each minor release")
+ap.add_argument('-N', '--name', help='Only produce output for NAME')
 
 options = ap.parse_args()
 fname = 'template.html' if options.format == 'html' else 'template-dita.xml'
+if options.name:
+    fname = "template-single.html"
 buf = open(fname, "r").read()
 
 class VersionInfo(object):
@@ -48,11 +51,17 @@ VERSIONS = [
         VersionInfo('lcb_256', '2.5.6'),
         VersionInfo('lcb_257', '2.5.7'),
         VersionInfo('lcb_258', '2.5.8', is_final=True),
-        VersionInfo('lcb_260', '2.6.0', is_final=True, is_current=True)
+        VersionInfo('lcb_260', '2.6.0'),
+        VersionInfo('lcb_261', '2.6.1', is_final=True, is_current=True)
 ]
 
 if options.final_only:
     VERSIONS = [ x for x in VERSIONS if x.is_final ]
+
+if options.name:
+    VERSIONS = [ x for x in VERSIONS if x.verstr == options.name ]
+    if not VERSIONS:
+        raise ValueError("No version " + options.name)
 
 VERSIONS = list(reversed(VERSIONS))
 
