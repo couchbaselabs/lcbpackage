@@ -108,6 +108,10 @@ class WindowsTarget(object):
         self.display_version = display_version
 
     def get_filename(self, lcbvers, arch):
+        hv = mk_hexvers(lcbvers)
+        if self.version == 'vc14' and hv < 0x020601:
+            return 'N/A'
+
         if arch == 'x64':
             arch = 'amd64'
         return "libcouchbase-{0}_{1}_{2}.zip".format(lcbvers, arch, self.version)
@@ -157,6 +161,7 @@ TARGETS = (
         WindowsTarget('vc9', 'Visual Studio 2008'),
         WindowsTarget('vc10', 'Visual Studio 2010'),
         WindowsTarget('vc11', 'Visual Studio 2012'),
+        WindowsTarget('vc14', 'Visual Studio 2015'),
     )
 
 tmpl = Template(buf, trim_blocks=True, lstrip_blocks=True)
