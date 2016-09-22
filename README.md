@@ -292,6 +292,21 @@ be identical.
 
 ## Prerequisites
 
+### Packages
+
+```
+# For EL7
+yum -y install \
+    sudo git \
+    gcc gcc-c++ \
+    make cmake \
+    rpm-sign \
+    rpm-build \
+    rpm-devel \
+    createrepo \
+    expect 
+```
+
 ### Mock
 
 In RPM-land, the building itself is performed via the `mock` tool which
