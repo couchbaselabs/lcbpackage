@@ -52,7 +52,8 @@ VERSIONS = [
         VersionInfo('lcb_257', '2.5.7'),
         VersionInfo('lcb_258', '2.5.8', is_final=True),
         VersionInfo('lcb_260', '2.6.0'),
-        VersionInfo('lcb_261', '2.6.1', is_final=True, is_current=True)
+        VersionInfo('lcb_261', '2.6.1'),
+        VersionInfo('lcb_262', '2.6.2', is_final=True, is_current=True)
 ]
 
 if options.final_only:
