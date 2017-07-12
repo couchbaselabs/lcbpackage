@@ -27,7 +27,7 @@ do_distarch() {
     cp $srcdir/*.$arch.rpm $destdir
 
     for pkg in $destdir/*.rpm; do
-        expect $SCRIPTPATH/sign_rpm.expect $RPM_GPG_KEY $pkg
+        expect $SCRIPTPATH/sign_rpm.expect $RPM_GPG_KEY $pkg || true
     done
 
     # Generate the metadata structures
