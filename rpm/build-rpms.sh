@@ -20,7 +20,7 @@ rm -rf $WORKSPACE
 mkdir $WORKSPACE
 cd $WORKSPACE
 
-../cmake/configure --disable-plugins --disable-tests --with-cmake=cmake28
+../cmake/configure --disable-plugins --disable-tests
 make dist # Generates the tarball
 
 sed \
