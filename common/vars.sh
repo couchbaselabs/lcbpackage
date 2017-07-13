@@ -1,5 +1,9 @@
 # The local directory to server as the repository root
-export LCB_REPO_PREFIX=$HOME/repos/
+
+if [ -z "$LCB_REPO_PREFIX" ]; then
+    LCB_REPO_PREFIX=$HOME/repos/
+fi
+export LCB_REPO_PREFIX
 
 # This indicates the master is local, not remote
 export MASTER_IS_LOCAL=1
@@ -11,16 +15,26 @@ export APT_GPG_KEY=D9223EDA
 export DPKG_GPG_KEY=79CF7903
 
 # Architectures for debian
-export DEB_ARCHES="amd64 i386"
-export QUICK_DEB_ARCHES="amd64"
+if [ -z "$DEB_ARCHES" ]; then
+    DEB_ARCHES="amd64 i386"
+fi
+export DEB_ARCHES
 
-export DEB_DISTROS="precise trusty wheezy xenial jessie"
-export QUICK_DEB_DISTROS=wheezy
+if [ -z "$DEB_DISTROS" ]; then
+    DEB_DISTROS="precise trusty wheezy xenial jessie"
+fi
+export DEB_DISTROS
 
-export RPM_ARCHES="x86_64 i386"
-export RPM_RELNOS="6 7"
-export QUICK_RPM_ARCHES=x86_64
-export QUICK_RPM_RELNOS=6
+# RPM
+if [ -z "$RPM_ARCHES" ]; then
+    RPM_ARCHES="x86_64 i386"
+fi
+export RPM_ARCHES
+
+if [ -z "$RPM_RELNOS" ]; then
+    RPM_RELNOS="6 7"
+fi
+export RPM_RELNOS
 
 export RPM_GPG_KEY=CD406E62
 mkdir -p $LCB_REPO_PREFIX
