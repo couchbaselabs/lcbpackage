@@ -12,7 +12,7 @@ export MASTER_IS_LOCAL=1
 export APT_GPG_KEY=D9223EDA
 
 # GPG Key for dpkg/debsign
-export DPKG_GPG_KEY=79CF7903
+export DPKG_GPG_KEY=D9223EDA
 
 # Architectures for debian
 if [ -z "$DEB_ARCHES" ]; then
