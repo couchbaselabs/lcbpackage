@@ -59,8 +59,7 @@ do
         fi
         CUR_RESDIR=$RESDIR/el$RELNO
         /usr/bin/mock \
-            -r lcb-el$RELNO-$ARCH \
-            --define "__lcb_is_cmake 1" \
+            -r epel-$RELNO-$ARCH \
             --rebuild \
             --resultdir="$CUR_RESDIR" $SRCRPM $@
     done
