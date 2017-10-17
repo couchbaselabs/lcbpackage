@@ -37,8 +37,12 @@ do_distarch() {
 
 for DIST in $RPM_RELNOS; do
     for ARCH in $RPM_ARCHES; do
-        if [ $ARCH = 'i386' ] && [ $DIST = '7' ]; then
+        if [ $ARCH = 'i386' ]; then
+          if [ $DIST = '7' ]; then
             continue;
+          else
+            ARCH=i686
+          fi
         fi
         do_distarch $DIST $ARCH
     done

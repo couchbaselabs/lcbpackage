@@ -30,7 +30,7 @@ my %RPMSPECS = (
         },
         arch_pkg => sub {
             my $name = shift;
-            return $name eq 'x86' ? 'i386' : 'x86_64';
+            return $name eq 'x86' ? 'i686' : 'x86_64';
         },
     },
     '7' => {
