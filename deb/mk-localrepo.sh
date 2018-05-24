@@ -16,7 +16,6 @@ VERNUM=
 get_version() {
     name=$1
     if [ $name = 'trusty' ]; then VERNUM='14.04';
-    elif [ $name = 'wheezy' ]; then VERNUM='deb7';
     elif [ $name = 'xenial' ]; then VERNUM='16.04';
     elif [ $name = 'jessie' ]; then VERNUM='deb8';
     elif [ $name = 'bionic' ]; then VERNUM='18.04';

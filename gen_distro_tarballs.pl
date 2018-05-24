@@ -51,9 +51,6 @@ my %DEBSPECS = (
     trusty => {
         dist => 'ubuntu1404',
     },
-    wheezy => {
-        dist => 'wheezy'
-    },
     'jessie' => {
         dist => 'jessie'
     },
