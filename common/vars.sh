@@ -9,10 +9,10 @@ export LCB_REPO_PREFIX
 export MASTER_IS_LOCAL=1
 
 # GPG key for the _repository_
-export APT_GPG_KEY=D9223EDA
+export APT_GPG_KEY=407D39EDE72067607FF1DA1CA3FAA648D9223EDA
 
 # GPG Key for dpkg/debsign
-export DPKG_GPG_KEY=D9223EDA
+export DPKG_GPG_KEY=407D39EDE72067607FF1DA1CA3FAA648D9223EDA
 
 # Architectures for debian
 if [ -z "$DEB_ARCHES" ]; then
