@@ -75,7 +75,7 @@ for DIST in $DISTS; do
     for ARCH in $ARCHES; do
         RESDIR=DIST/$DIST
         [ -d $RESDIR ] || mkdir -p $RESDIR
-        sudo cowbuilder \
+        cowbuilder \
             --build \
             --basepath $PBROOT/$DIST-$ARCH.cow \
             --buildresult $RESDIR \
