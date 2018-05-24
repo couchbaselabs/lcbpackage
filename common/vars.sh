@@ -21,7 +21,7 @@ fi
 export DEB_ARCHES
 
 if [ -z "$DEB_DISTROS" ]; then
-    DEB_DISTROS="precise trusty wheezy xenial jessie"
+    DEB_DISTROS="trusty wheezy xenial jessie bionic stretch"
 fi
 export DEB_DISTROS
 

@@ -51,9 +51,6 @@ my %DEBSPECS = (
     trusty => {
         dist => 'ubuntu1404',
     },
-    precise => {
-        dist => 'ubuntu1204'
-    },
     wheezy => {
         dist => 'wheezy'
     },
@@ -62,6 +59,12 @@ my %DEBSPECS = (
     },
     'xenial' => {
         dist => 'ubuntu1604'
+    },
+    'bionic' => {
+        dist => 'ubuntu1804'
+    },
+    'stretch' => {
+        dist => 'stretch'
     }
 );
 
