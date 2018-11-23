@@ -35,10 +35,8 @@ rpmbuild -bs --nodeps \
 		 --define "_srcrpmdir ${PWD}" libcouchbase.spec
 
 SRCRPM=libcouchbase-${VERSION}-${RELEASE}*.src.rpm
-RESDIR=$WORKSPACE/DIST
+RESDIR=$WORKSPACE
 mkdir -p $RESDIR
-
-
 
 for RELNO in $RPM_RELNOS
 do
