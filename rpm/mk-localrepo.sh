@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 pushd `dirname $0` > /dev/null
 SCRIPTPATH=`pwd`
@@ -21,7 +22,7 @@ do_distarch() {
     if [ $dist = '6' ]; then dist_subdir='6.2'; else dist_subdir=$dist; fi
     # Copy the relevant files into the directory
     destdir=$RPM_REPO/$dist_subdir/$arch
-    srcdir=$TOPDIR/LCBPACKAGE-RPM/DIST/el$dist
+    srcdir=$TOPDIR/LCBPACKAGE-RPM/el$dist
     mkdir -p $destdir
     cp $srcdir/*.src.rpm $destdir
     cp $srcdir/*.$arch.rpm $destdir

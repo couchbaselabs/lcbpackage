@@ -20,6 +20,7 @@ get_version() {
     elif [ $name = 'jessie' ]; then VERNUM='deb8';
     elif [ $name = 'bionic' ]; then VERNUM='18.04';
     elif [ $name = 'stretch' ]; then VERNUM='deb9';
+    elif [ $name = 'buster' ]; then VERNUM='deb10';
     else
         echo "Unknown distribution name $name"
         exit 1

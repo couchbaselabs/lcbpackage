@@ -21,7 +21,7 @@ fi
 export DEB_ARCHES
 
 if [ -z "$DEB_DISTROS" ]; then
-    DEB_DISTROS="trusty xenial jessie bionic stretch"
+    DEB_DISTROS="trusty xenial jessie bionic stretch buster"
 fi
 export DEB_DISTROS
 
